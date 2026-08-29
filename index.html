@@ -1,80 +1,123 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم شرطة لوس سانتوس</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSPD | Police Department</title>
 <style>
-:root{--bg:#080b10;--card:#11161e;--border:#1e2a3a;--blue:#2777ff;--green:#0abf77;--red:#ff3b4a;--yellow:#ffc431;--text:#e6eefc;--muted:#7c8da6}
-*{box-sizing:border-box} body{margin:0;font-family:Cairo;background:linear-gradient(180deg,#0a0f18 0,#080b10 100%);color:var(--text);min-height:100vh}
-header{position:sticky;top:0;z-index:20;background:rgba(10,15,24,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;justify-content:space-between}
-.btn{border:0;padding:10px 16px;border-radius:12px;font-weight:800;cursor:pointer} .btn.blue{background:var(--blue);color:#fff} .btn.red{background:var(--red);color:#fff} .btn.green{background:var(--green);color:#fff} .btn.ghost{background:#172233;color:var(--text);border:1px solid var(--border)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
-input,select,textarea{width:100%;background:#0e1520;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px}
-.layout{max-width:1250px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:260px 1fr;gap:18px}
-nav .item{display:flex;gap:10px;padding:12px 14px;border-radius:12px;cursor:pointer} nav .item.active{background:#11203a;border:1px solid #1d3a67}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px} .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid var(--border);text-align:right;font-size:14px}
-.badge{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid var(--border)} .badge.blue{background:rgba(39,119,255,.15);color:#7fb0ff} .badge.green{background:rgba(10,191,119,.15);color:#6ef0b8}
-.hidden{display:none!important} .overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px} .modal{width:100%;max-width:520px}
-@media(max-width:980px){.layout{grid-template-columns:1fr} .grid{grid-template-columns:1fr 1fr}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#080b10;color:#fff}
+.top{height:70px;background:#10151d;border-bottom:1px solid #27303b;display:flex;align-items:center;padding:0 15px;position:sticky;top:0;z-index:20}
+.menu{width:44px;height:44px;border:0;border-radius:12px;background:#202733;color:#fff;font-size:23px;cursor:pointer}
+.logo{font-size:22px;font-weight:bold;margin-right:12px}.logo span{color:#4d8dff}
+.notify{margin-right:auto;width:44px;height:44px;border:0;border-radius:12px;background:#202733;color:#fff;font-size:19px;position:relative;cursor:pointer;margin-left:8px}
+.badge{position:absolute;top:-4px;left:-4px;background:#ef4444;width:19px;height:19px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
+.logout{width:44px;height:44px;border:0;border-radius:12px;background:#40191d;color:#ff7777;font-size:18px;cursor:pointer}
+.sidebar{position:fixed;top:0;right:-300px;height:100vh;width:285px;background:#10141b;border-left:1px solid #29313c;z-index:50;padding:20px;transition:.25s;overflow-y:auto}.sidebar.open{right:0}
+.nav{display:block;width:100%;border:0;background:transparent;color:#cbd5e1;padding:14px;border-radius:11px;text-align:right;margin-bottom:7px;cursor:pointer}.nav.active,.nav:hover{background:#1c2a3e;color:#fff}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40}.overlay.show{display:block}
+.container{max-width:1150px;margin:auto;padding:22px 15px}.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,#121d2c,#10151d);border:1px solid #293441;border-radius:18px;padding:25px;margin-bottom:17px}.muted{color:#8d98a8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:17px}.card{background:#11161e;border:1px solid #29313c;border-radius:15px;padding:17px}.big{font-size:27px;font-weight:bold;margin-top:8px}
+.panel{background:#11161e;border:1px solid #29313c;border-radius:16px;margin-bottom:17px;overflow:hidden}.panel-title{padding:16px;border-bottom:1px solid #29313c;font-weight:bold}.panel-body{padding:17px}
+table{width:100%;border-collapse:collapse}th,td{padding:13px;border-bottom:1px solid #252d37;text-align:right;white-space:nowrap}th{font-size:12px;color:#8d98a8}
+input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;border-radius:10px;padding:12px;color:#fff;outline:none}textarea{min-height:120px}.form{display:grid;gap:11px}
+.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:bold;color:#fff;cursor:pointer}.blue{background:#2777ff}.green{background:#16a34a}.red{background:#dc2626}.yellow{background:#eab308;color:#111}.btn:disabled{opacity:.35}
+.status{padding:6px 10px;border-radius:20px;font-size:11px}.online{background:#123a25;color:#5ee890}.offline{background:#40191d;color:#ff7777}
+.unit{background:#1c2b40;color:#9fc4ff;padding:6px 9px;border-radius:8px}.points{color:#ffd45b;font-weight:bold}
+.request{background:#151b24;border:1px solid #2b3542;border-radius:13px;padding:15px;margin-bottom:12px}.empty{padding:25px;text-align:center;color:#7f8998}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modal-box{width:min(450px,100%);background:#11161e;border:1px solid #303946;border-radius:17px;padding:20px}
+.auth{position:fixed;inset:0;background:#080b10;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}.auth.hide{display:none}
+.auth-box{width:min(400px,100%);background:#11161e;border:1px solid #29313c;border-radius:20px;padding:30px;text-align:center}
+.welcome{background:#123a25;border:1px solid #1a5a33;border-radius:12px;padding:12px;margin-bottom:15px}
 </style>
 </head>
 <body>
-<header><div style="font-weight:800">🚔 LSPD - شرطة لوس سانتوس</div><div style="display:flex;gap:8px"><span id="who" class="badge blue"></span><button id="btnLogout" class="btn ghost">خروج</button></div></header>
-
-<div id="authScreen" class="overlay" style="z-index:200"><div class="card modal" style="text-align:center"><h2>🚔 دخول العسكري</h2><p style="color:var(--muted)">اذا اسمك جديد بيتم تسجيلك تلقائياً</p><div style="display:grid;gap:10px;text-align:right"><label>اسمك العسكري</label><input id="authName" placeholder="مثال: سيف العنزي"><label>كلمة السر</label><input id="authPass" type="password" placeholder="••••••"><button class="btn blue" onclick="window.authLogin()">🚪 دخول / تسجيل جديد</button><div id="authMsg" style="color:var(--yellow);font-size:13px;min-height:18px"></div></div></div></div>
-
-<div class="layout">
-<nav class="card" style="height:fit-content;position:sticky;top:76px"><div style="font-weight:800;margin-bottom:10px">القائمة</div><div class="item active" data-page="dash">📊 لوحة التحكم</div><div class="item" data-page="soldiers">👮 العساكر</div><div class="item" data-page="attend">📋 الحضور</div><div class="item" data-page="leaves">🌴 الإجازات</div><div class="item" data-page="promos">⭐ الترقيات</div><div class="item" data-page="chat">💬 الشات</div><div class="item" data-page="settings">⚙️ الإعدادات</div></nav>
-<main style="display:grid;gap:18px">
-<section id="page-dash"><div class="grid"><div class="card"><div style="color:var(--muted)">العساكر</div><div id="kpiSoldiers" style="font-size:28px;font-weight:800">0</div></div><div class="card"><div style="color:var(--muted)">حضور اليوم</div><div id="kpiAttend" style="font-size:28px;font-weight:800">0</div></div><div class="card"><div style="color:var(--muted)">إجازات معلقة</div><div id="kpiLeaves" style="font-size:28px;font-weight:800">0</div></div><div class="card"><div style="color:var(--muted)">متوسط النقاط</div><div id="kpiPoints" style="font-size:28px;font-weight:800">0</div></div></div><div class="grid2" style="margin-top:14px"><div class="card"><h3>آخر الحضور</h3><div id="lastAttend"></div></div><div class="card"><h3>أعلى النقاط</h3><div id="topPoints"></div></div></div></section>
-<section id="page-soldiers" class="hidden"><div class="card"><div style="display:flex;justify-content:space-between"><h3 style="margin:0">العساكر</h3><div style="display:flex;gap:8px"><input id="searchSoldier" placeholder="بحث..." style="max-width:200px"><button id="btnAddSoldier" class="btn blue">+ إضافة</button></div></div><div style="overflow:auto;margin-top:12px"><table id="tblSoldiers"><thead><tr><th>الاسم</th><th>الرتبة</th><th>النقاط</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody></tbody></table></div></div></section>
-<section id="page-attend" class="hidden"><div class="card"><div style="display:flex;justify-content:space-between"><h3 style="margin:0">سجل الحضور</h3><button id="btnMarkAttend" class="btn green">✅ تسجيل حضوري</button></div><div style="overflow:auto;margin-top:12px"><table id="tblAttend"><thead><tr><th>التاريخ</th><th>العسكري</th><th>الوقت</th></tr></thead><tbody></tbody></table></div></div></section>
-<section id="page-leaves" class="hidden"><div class="card"><div style="display:flex;justify-content:space-between"><h3 style="margin:0">الإجازات</h3><button id="btnReqLeave" class="btn blue">طلب إجازة</button></div><div style="overflow:auto;margin-top:12px"><table id="tblLeaves"><thead><tr><th>العسكري</th><th>من</th><th>إلى</th><th>السبب</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody></tbody></table></div></div></section>
-<section id="page-promos" class="hidden"><div class="card"><h3>الترقيات</h3><div id="promoList"></div></div></section>
-<section id="page-chat" class="hidden"><div class="card" style="display:grid;gap:12px"><h3 style="margin:0">شات القطاع 💬</h3><div id="chatBox" style="height:380px;overflow:auto;background:#0d131d;border:1px solid var(--border);border-radius:12px;padding:12px;display:grid;gap:8px"></div><div style="display:flex;gap:8px"><input id="chatInput" placeholder="اكتب رسالتك..."><button id="chatSend" class="btn blue">إرسال</button></div></div></section>
-<section id="page-settings" class="hidden"><div class="card"><h3>الإعدادات</h3><p style="color:var(--muted)">كل البيانات مشتركة للجميع عبر Firebase</p><button id="btnReset" class="btn red">حذف كل البيانات</button></div></section>
-</main>
+<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">اكتب اسمك المسجل من القيادة فقط</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك العسكري"><button class="btn blue" onclick="window.authLogin()">🚪 دخول</button><div id="authMsg" style="color:#ffd45b;margin-top:10px;min-height:18px"></div></div></div></div>
+<header class="top"><button class="menu" id="menuBtn">☰</button><div class="logo">LSPD <span>POLICE</span></div><button class="notify" id="notifyBtn">🔔<span class="badge" id="badge">0</span></button><button class="logout" id="logoutBtn">🚪</button></header>
+<div class="overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar"><div style="font-size:22px;font-weight:bold;margin-bottom:25px">🚔 LSPD</div>
+<button class="nav active" data-page="soldiers">👮 جدول العساكر</button><button class="nav" data-page="mdt">📡 MDT</button><button class="nav" data-page="attendance">🕐 الدخول والخروج</button><button class="nav" data-page="protocols">📜 بروتوكولات الشرطة</button><button class="nav" data-page="leaders">👑 القيادات</button>
+</aside>
+<main class="container">
+<section id="soldiers" class="page active">
+<div class="hero"><h1>👮 جدول العساكر</h1><div id="welcomeBox"></div></div>
+<div class="stats"><div class="card"><small>إجمالي</small><div class="big" id="total">0</div></div><div class="card"><small>داخل</small><div class="big" id="inside">0</div></div><div class="card"><small>النقاط</small><div class="big" id="points">0</div></div><div class="card"><small>الرحلة</small><div class="big" id="trip">مغلقة</div></div></div>
+<div class="panel"><div style="display:flex;justify-content:space-between;padding:15px"><b>قائمة العساكر</b><input id="search" placeholder="🔎 بحث" style="max-width:200px"></div><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>العسكري</th><th>الرتبة</th><th>اليونت</th><th>النقاط</th><th>الحالة</th></tr></thead><tbody id="table"></tbody></table></div></div>
+</section>
+<section id="mdt" class="page"><div class="hero"><h1>📡 MDT</h1></div>
+<div class="panel"><div class="panel-title">📤 إرسال حالة</div><div class="panel-body"><div class="form"><input id="mdtName" disabled><input id="mdtTitle" placeholder="عنوان الحالة"><textarea id="mdtText" placeholder="تفاصيل..."></textarea><input type="file" id="mdtFile" accept="image/*"><button class="btn blue" id="sendMdtBtn">📡 إرسال</button></div></div></div>
+<div class="panel"><div class="panel-title">📨 طلباتي</div><div class="panel-body" id="myRequests"></div></div></section>
+<section id="attendance" class="page"><div class="hero"><h1>🕐 الدخول والخروج</h1></div>
+<div class="panel"><div class="panel-body"><div>الرحلة: <strong id="attendanceTrip">🔴 مغلقة</strong></div><div class="form" style="margin-top:15px"><input id="attendanceName" disabled><button id="loginButton" class="btn green">🟢 دخول</button><button id="logoutButton" class="btn red">🔴 خروج</button><button id="myPointsBtn" class="btn yellow">⭐ نقاطي</button></div><div id="attendanceInfo" style="margin-top:15px" class="muted"></div></div></div></section>
+<section id="protocols" class="page">
+<div class="hero"><h1>📜 Police Protocols</h1></div>
+<div class="panel"><div class="panel-title">📡 أكواد الراديو</div><div class="panel-body" style="padding:0"><table><thead><tr><th>الكود</th><th>المعنى</th></tr></thead><tbody>
+<tr><td>10-4</td><td>علم</td></tr><tr><td>10-2</td><td>غير صحيح</td></tr><tr><td>0-2</td><td>مرر</td></tr><tr><td>0-3</td><td>تسمعني ؟</td></tr><tr><td>0-7</td><td>خروج</td></tr><tr><td>0-8</td><td>دخول</td></tr>
+</tbody></table></div></div>
+</section>
+<section id="leaders" class="page"><div class="hero"><h1>👑 القيادات</h1></div>
+<div id="leaderLogin"><div class="panel"><div class="panel-body"><div class="form"><input type="password" id="password" placeholder="🔐 كلمة المرور 123654"><button class="btn blue" id="leaderLoginBtn">دخول</button></div></div></div></div>
+<div id="leaderPanel" style="display:none">
+<div class="panel"><div class="panel-title">🔓 التحكم بالرحلة</div><div class="panel-body"><button id="tripButton" class="btn green">🟢 فتح</button></div></div>
+<div class="panel"><div class="panel-title">➕ إضافة عسكري</div><div class="panel-body"><div class="form"><input id="newName" placeholder="اسم العسكري"><input id="newRank" placeholder="الرتبة"><input id="newUnit" placeholder="اليونت"><button class="btn blue" id="addSoldierBtn">➕ إضافة</button></div></div></div>
+<div class="panel"><div class="panel-title">👮‍♂️ إدارة العساكر - اختر من الجدول</div><div class="panel-body">
+<div class="form">
+<select id="pointsSelect" style="font-size:16px;font-weight:bold"></select>
+<div id="selectedCard"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input type="number" id="pointsAmount" value="10" style="flex:1;min-width:90px">
+<button class="btn green" id="pointsAddBtn" style="flex:1">➕ إضافة</button>
+<button class="btn red" id="pointsRemoveBtn" style="flex:1">➖ خصم</button>
+<button class="btn blue" id="pointsSetBtn" style="flex:1">✏️ تثبيت</button>
 </div>
-
-<div id="modalSoldier" class="overlay hidden"><div class="card modal"><h3>إضافة عسكري</h3><div style="display:grid;gap:10px"><input id="sName" placeholder="الاسم"><input id="sRank" placeholder="الرتبة"><input id="sPoints" type="number" placeholder="النقاط"><select id="sStatus"><option>نشط</option><option>إجازة</option><option>موقوف</option></select><div style="display:flex;gap:8px"><button id="saveSoldier" class="btn blue" style="flex:1">حفظ</button><button class="btn ghost closeModal" style="flex:1">إلغاء</button></div></div></div></div>
-<div id="modalLeave" class="overlay hidden"><div class="card modal"><h3>طلب إجازة</h3><div style="display:grid;gap:10px"><input id="lFrom" type="date"><input id="lTo" type="date"><textarea id="lReason" placeholder="السبب"></textarea><div style="display:flex;gap:8px"><button id="saveLeave" class="btn blue" style="flex:1">إرسال</button><button class="btn ghost closeModal" style="flex:1">إلغاء</button></div></div></div></div>
-
+<div id="pointsPreview" class="muted"></div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button class="btn red" id="deleteSelectedBtn" style="flex:1">🗑️ حذف العسكري</button>
+<button class="btn" style="flex:1;background:#444" id="resetSelectedBtn">🔄 تصفير نقاطه</button>
+</div>
+</div>
+</div></div>
+<div class="panel"><div class="panel-title">📨 طلبات MDT</div><div class="panel-body" id="requests"></div></div></div></section>
+</main>
+<div class="modal" id="notificationModal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><h3>🔔 إشعاراتك</h3><button style="background:#303846;border:0;color:#fff;width:35px;height:35px;border-radius:9px" id="closeNotifBtn">×</button></div><div id="notifications"></div></div></div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {getFirestore,collection,doc,setDoc,getDoc,getDocs,deleteDoc,onSnapshot,addDoc,updateDoc,query,orderBy} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import {getFirestore,collection,doc,setDoc,getDoc,deleteDoc,onSnapshot,addDoc,updateDoc} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyDPW113hl8oe6RfF6rpq_-vUQ_0AK34sSs",authDomain:"lspd-2026-1.firebaseapp.com",projectId:"lspd-2026-1"};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
-let currentUser=localStorage.getItem("lspd_user")||null;let soldiers=[],attend=[],leaves=[],chats=[];
-const ranks=["عسكري","عريف","وكيل رقيب","رقيب","رئيس رقباء","ملازم","نقيب","رائد","مقدم","عقيد","عميد","لواء"];
-function showAuth(){document.getElementById("authScreen").classList.remove("hidden")}function hideAuth(){document.getElementById("authScreen").classList.add("hidden");document.getElementById("who").innerText=currentUser}
-window.authLogin=async()=>{const name=document.getElementById("authName").value.trim();const pass=document.getElementById("authPass").value.trim();const msg=document.getElementById("authMsg");if(!name||!pass){msg.innerText="عبي البيانات";return}msg.innerText="⏳ جاري...";try{const ref=doc(db,"soldiers",name.toLowerCase());const snap=await getDoc(ref);if(!snap.exists()){await setDoc(ref,{name:name,password:pass,rank:"عسكري",points:0,status:"نشط",created:Date.now()});currentUser=name;localStorage.setItem("lspd_user",name);hideAuth()}else{if(snap.data().password==pass){currentUser=name;localStorage.setItem("lspd_user",name);hideAuth()}else{msg.innerText="❌ كلمة السر غلط"}}}catch(e){msg.innerText="خطأ: "+e.message}};
-if(!currentUser)showAuth();else hideAuth();
-document.getElementById("btnLogout").onclick=()=>{localStorage.removeItem("lspd_user");location.reload()};
-document.querySelectorAll("nav .item").forEach(el=>el.onclick=()=>{document.querySelectorAll("nav .item").forEach(i=>i.classList.remove("active"));el.classList.add("active");document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById("page-"+el.dataset.page).classList.remove("hidden")});
-function listenAll(){onSnapshot(collection(db,"soldiers"),snap=>{soldiers=snap.docs.map(d=>d.data());renderSoldiers();renderDash();renderPromos()});onSnapshot(query(collection(db,"attendance"),orderBy("ts","desc")),snap=>{attend=snap.docs.map(d=>({id:d.id,...d.data()}));renderAttend();renderDash()});onSnapshot(collection(db,"leaves"),snap=>{leaves=snap.docs.map(d=>({id:d.id,...d.data()}));renderLeaves();renderDash()});onSnapshot(query(collection(db,"chat"),orderBy("ts","asc")),snap=>{chats=snap.docs.map(d=>d.data());renderChat()})}
-listenAll();
-function renderDash(){document.getElementById("kpiSoldiers").innerText=soldiers.length;const today=new Date().toISOString().slice(0,10);document.getElementById("kpiAttend").innerText=attend.filter(a=>a.date==today).length;document.getElementById("kpiLeaves").innerText=leaves.filter(l=>l.status=="معلق").length;const avg=soldiers.length?Math.round(soldiers.reduce((s,x)=>s+(x.points||0),0)/soldiers.length):0;document.getElementById("kpiPoints").innerText=avg;document.getElementById("lastAttend").innerHTML=attend.slice(0,5).map(a=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>${a.name}</span><span style="color:var(--muted)">${a.date}</span></div>`).join("")||"لا يوجد";document.getElementById("topPoints").innerHTML=[...soldiers].sort((a,b)=>(b.points||0)-(a.points||0)).slice(0,5).map(s=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>${s.name}</span><b>${s.points||0}</b></div>`).join("")||"لا يوجد"}
-function renderSoldiers(){const q=(document.getElementById("searchSoldier").value||"").toLowerCase();document.querySelector("#tblSoldiers tbody").innerHTML=soldiers.filter(s=>s.name.toLowerCase().includes(q)).map(s=>`<tr><td>${s.name}</td><td><span class=badge style="background:rgba(39,119,255,.15)">${s.rank}</span></td><td>${s.points||0}</td><td>${s.status}</td><td><button class="btn ghost" onclick="editSoldier('${s.name}')">تعديل</button> <button class="btn ghost" onclick="delSoldier('${s.name}')">حذف</button></td></tr>`).join("")}
-document.getElementById("searchSoldier").oninput=renderSoldiers;
-let editingName=null;document.getElementById("btnAddSoldier").onclick=()=>{editingName=null;document.getElementById("modalSoldier").classList.remove("hidden")};
-window.editSoldier=(name)=>{const s=soldiers.find(x=>x.name==name);if(!s)return;editingName=s.name;document.getElementById("sName").value=s.name;document.getElementById("sRank").value=s.rank;document.getElementById("sPoints").value=s.points;document.getElementById("sStatus").value=s.status;document.getElementById("modalSoldier").classList.remove("hidden")};
-window.delSoldier=async(name)=>{if(!confirm("تحذف "+name+"؟"))return;await deleteDoc(doc(db,"soldiers",name.toLowerCase()))};
-document.getElementById("saveSoldier").onclick=async()=>{const name=document.getElementById("sName").value.trim();const rank=document.getElementById("sRank").value||"عسكري";const points=parseInt(document.getElementById("sPoints").value)||0;const status=document.getElementById("sStatus").value;if(!name)return;const ref=doc(db,"soldiers",(editingName||name).toLowerCase());const ex=editingName?(await getDoc(ref)).data():{};await setDoc(ref,{name,rank,points,status,password:ex?.password||"123",created:ex?.created||Date.now()});if(editingName&&editingName.toLowerCase()!=name.toLowerCase())await deleteDoc(doc(db,"soldiers",editingName.toLowerCase()));document.getElementById("modalSoldier").classList.add("hidden")};
-function renderAttend(){document.querySelector("#tblAttend tbody").innerHTML=attend.map(a=>`<tr><td>${a.date}</td><td>${a.name}</td><td>${a.time||""}</td></tr>`).join("")}
-document.getElementById("btnMarkAttend").onclick=async()=>{const now=new Date();const date=now.toISOString().slice(0,10);const time=now.toLocaleTimeString("ar-SA");await addDoc(collection(db,"attendance"),{name:currentUser,date,time,ts:Date.now()});const r=doc(db,"soldiers",currentUser.toLowerCase());const s=await getDoc(r);if(s.exists())await updateDoc(r,{points:(s.data().points||0)+1});alert("✅ تم تسجيل حضورك")};
-function renderLeaves(){document.querySelector("#tblLeaves tbody").innerHTML=leaves.map(l=>`<tr><td>${l.name}</td><td>${l.from}</td><td>${l.to}</td><td>${l.reason}</td><td>${l.status}</td><td>${l.status=="معلق"?`<button class="btn green" onclick="decideLeave('${l.id}','مقبول')">قبول</button> <button class="btn red" onclick="decideLeave('${l.id}','مرفوض')">رفض</button>`:"-"}</td></tr>`).join("")}
-document.getElementById("btnReqLeave").onclick=()=>document.getElementById("modalLeave").classList.remove("hidden");
-document.getElementById("saveLeave").onclick=async()=>{const from=document.getElementById("lFrom").value;const to=document.getElementById("lTo").value;const reason=document.getElementById("lReason").value;await addDoc(collection(db,"leaves"),{name:currentUser,from,to,reason,status:"معلق",ts:Date.now()});document.getElementById("modalLeave").classList.add("hidden")};
-window.decideLeave=async(id,st)=>{await updateDoc(doc(db,"leaves",id),{status:st})};
-function renderPromos(){document.getElementById("promoList").innerHTML=soldiers.map(s=>{const idx=ranks.indexOf(s.rank);const next=idx<ranks.length-1?ranks[idx+1]:null;const can=(s.points||0)>=10&&next;return `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div><b>${s.name}</b> - ${s.rank} (${s.points||0}) ${next?`→ ${next}`:""}</div>${can?`<button class="btn blue" onclick="promote('${s.name}')">ترقية</button>`:""}</div>`}).join("")}
-window.promote=async(name)=>{const ref=doc(db,"soldiers",name.toLowerCase());const snap=await getDoc(ref);const d=snap.data();const idx=ranks.indexOf(d.rank);await updateDoc(ref,{rank:ranks[idx+1],points:0})};
-function renderChat(){const box=document.getElementById("chatBox");box.innerHTML=chats.map(c=>`<div><b style="color:#2777ff">${c.name}:</b> ${c.text}</div>`).join("");box.scrollTop=box.scrollHeight}
-document.getElementById("chatSend").onclick=async()=>{const i=document.getElementById("chatInput");const t=i.value.trim();if(!t)return;await addDoc(collection(db,"chat"),{name:currentUser,text:t,ts:Date.now()});i.value=""};
-document.querySelectorAll(".closeModal").forEach(b=>b.onclick=()=>b.closest(".overlay").classList.add("hidden"));
-document.getElementById("btnReset").onclick=async()=>{if(!confirm("تحذف كل شي؟"))return;for(let col of["soldiers","attendance","leaves","chat"]){const snap=await getDocs(collection(db,col));for(let d of snap.docs)await deleteDoc(d.ref)}};
-</script>
-</body>
-</html>
+let soldiers=[],requests=[],notifications=[],tripOpen=false,currentUser=localStorage.getItem("LSPD_CURRENT_USER")||"";
+const PASSWORD="123654";
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function findSoldier(n){return soldiers.find(s=>s.name.toLowerCase()===n.toLowerCase());}
+function findById(id){return soldiers.find(s=>s.id==id);}
+function getPoints(s){let p=s.points||0;if(s.inside&&s.loginTime){p+=Math.floor((Date.now()-s.loginTime)/60000/30);}return p;}
+function checkAuth(){if(!currentUser||!findSoldier(currentUser)){document.getElementById("authScreen").classList.remove("hide");}else{document.getElementById("authScreen").classList.add("hide");document.getElementById("mdtName").value=currentUser;document.getElementById("attendanceName").value=currentUser;renderWelcome();}}
+window.authLogin=async()=>{
+let n=document.getElementById("authName").value.trim();let msg=document.getElementById("authMsg");
+if(!n){msg.innerText="اكتب اسمك";return}msg.innerText="⏳ جاري...";
+let s=findSoldier(n);
+if(!s){
+msg.innerText="❌ غير موجود - تواصل مع القيادة لإضافتك";
+return;
+}else{currentUser=s.name;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();}
+};
+function logoutUser(){if(confirm("خروج؟")){currentUser="";localStorage.removeItem("LSPD_CURRENT_USER");checkAuth();}}
+function renderWelcome(){let s=findSoldier(currentUser);if(!s)return;document.getElementById("welcomeBox").innerHTML=`<div class="welcome">👋 مرحبا <b>${esc(s.name)}</b> | <span class="points">⭐ ${getPoints(s)}</span></div>`;document.getElementById("attendanceInfo").textContent=`نقاطك: ${getPoints(s)}`;}
+function openMenu(){document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").classList.add("show");}
+function closeMenu(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show");}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));let b=document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add("active");closeMenu();render();}
+function renderSoldiers(){let q=document.getElementById("search").value.toLowerCase();let list=soldiers.filter(s=>s.name.toLowerCase().includes(q));let tb=document.getElementById("table");tb.innerHTML="";list.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.rank)}</td><td><span class="unit">${esc(s.unit)}</span></td><td><span class="points">⭐ ${getPoints(s)}</span></td><td><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span></td>`;tb.appendChild(tr);});document.getElementById("total").textContent=soldiers.length;document.getElementById("inside").textContent=soldiers.filter(s=>s.inside).length;document.getElementById("points").textContent=soldiers.reduce((a,s)=>a+getPoints(s),0);document.getElementById("trip").textContent=tripOpen?"مفتوحة":"مغلقة";}
+async function toggleTrip(){tripOpen=!tripOpen;await setDoc(doc(db,"settings","trip"),{open:tripOpen});if(!tripOpen){for(let s of soldiers.filter(x=>x.inside)){await updateDoc(doc(db,"soldiers",s.id),{points:getPoints(s),inside:false,loginTime:null});}}render();}
+async function login(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(s.inside){alert("مسجل.");return;}await updateDoc(doc(db,"soldiers",s.id),{inside:true,loginTime:Date.now()});}
+async function logout(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(!s.inside){alert("غير مسجل.");return;}await updateDoc(doc(db,"soldiers",s.id),{points:getPoints(s),inside:false,loginTime:null});}
+function myPoints(){let s=findSoldier(currentUser);alert("⭐ "+s.name+": "+getPoints(s));}
+async function addSoldier(){let a=document.getElementById("newName").value.trim();let b=document.getElementById("newRank").value.trim()||"عسكري";let c=document.getElementById("newUnit").value.trim()||"A-1";if(!a){alert("❌ اكتب الاسم");return;}if(findSoldier(a)){alert("موجود.");return;}let id=Date.now().toString();await setDoc(doc(db,"soldiers",id),{id:id,name:a,rank:b,unit:c,points:0,inside:false,loginTime:null,created:Date.now()});document.getElementById("newName").value="";document.getElementById("newRank").value="";document.getElementById("newUnit").value="";}
+async function removeSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("حذف "+s.name+"؟"))return;await deleteDoc(doc(db,"soldiers",s.id));}
+function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌ كلمة المرور غلط");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
+function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value||soldiers[0].id;sel.innerHTML=soldiers.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)} - ⭐ ${getPoints(s)}</option>`).join("");let s=findById(currentId)||soldiers[0];if(!s)return;document.getElementById("selectedCard").innerHTML=`<div class="request" style="background:#0f1a2a;border-color:#2a3d5a"><div style="display:flex;justify-content:space-between"><div><b style="font-size:18px">${esc(s.name)}</b><br><span class="muted">${esc(s.rank)} | ${esc(s.unit)}</span><br><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span> <span class="points" style="font-size:18px">⭐ ${getPoints(s)}</span></div><div style="font-size:35px">👮</div></div></div>`;document.getElementById("pointsPreview").textContent=`المحدد: ${s.name} | نقاطه: ${getPoints(s)}`;}
+async function handlePoints(act){let sel=document.getElementById("pointsSelect");let inp=document.getElementById("pointsAmount");let s=findById(sel.value);if(!s)return;let v=parseInt(inp.value)||0;let np=s.points||0;if(act=="add")np+=v;if(act=="remove")np=Math.max(0,np-v);if(act=="set")np=v;await updateDoc(doc(db,"soldiers",s.id),{points:np,loginTime:s.inside?Date.now():null});}
+async function resetSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("تصفير "+s.name+"؟"))return;await updateDoc(doc(db,"soldiers",s.id),{points:0,loginTime:s.inside?Date.now():null});}
+async function sendMDT(){let title=document.getElementById("mdtTitle").value.trim();let text=document.getElementById("mdtText").value.trim();let file=document.getElementById("mdtFile").files[0];if(!title||!text){alert("❌ أكمل");return;}async function create(img){await addDoc(collection(db,"requests"),{name:currentUser,title:title,text:text,image:img||"",status:"pending",time:Date.now()});await addDoc(collection(db,"notifications"),{type:"leader",title:"📨 طلب جديد",message:currentUser+" أرسل حالة.",time:Date.now()});alert("✅ تم");document.getElementById("mdtTitle").value="";document.getElementById("mdtText").value="";document.getElementById("mdtFile").value="";}if(file){let r=new FileReader();r.onload=e=>create(e.target.result);r.readAsDataURL(file);}else create("");}
+async function acceptRequest(id){let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await updateDoc(doc(db,"requests",id),{status:"accepted"});let s=findSoldier(r.name);if(s)await updateDoc(doc(db,"soldiers",s.id),{points:(s.points||0)+10});await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"✅ قبول",message:"+10 نقاط!",time:Date.now()});}
+async function rejectRequest(id){await updateDoc(doc(db,"requests",id),{status:"rejected"});let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"❌ رفض",message:"تم الرفض.",time:Date.now()});}
+window.acceptRequest=acceptRequest;window.rejectRequest=rejectRequest;
+function renderRequests(){let box=document.getElementById("requests");let list=requests.filter(r=>r.status=="pending");if(!list.length){box.innerHTML='<div class="empty">لا توجد طلبات.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>📨 ${esc(r.title)}</b><p>${esc(r.name)}</p><p class="muted">${esc(r.text)}</p>${r.image?`<img src="${r.image}" style="max-width:200px;border-radius:8px;margin-top:8px">`:""}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="acceptRequest('${r.id}')">✅ قبول +10</button><button class="btn red" onclick="rejectRequest('${r.id
