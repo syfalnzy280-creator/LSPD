@@ -251,4 +251,1582 @@ gap:11px;
 .btn{
 border:0;
 border-radius:10px;
-padding:
+padding:11px 15px;
+font-weight:bold;
+color:#fff;
+}
+
+.blue{background:#2777ff}
+.green{background:#16a34a}
+.red{background:#dc2626}
+.gray{background:#303846}
+.yellow{background:#eab308;color:#111}
+
+.btn:disabled{
+opacity:.35;
+cursor:not-allowed;
+}
+
+.status{
+padding:6px 10px;
+border-radius:20px;
+font-size:11px;
+}
+
+.online{
+background:#123a25;
+color:#5ee890;
+}
+
+.offline{
+background:#40191d;
+color:#ff7777;
+}
+
+.unit{
+background:#1c2b40;
+color:#9fc4ff;
+padding:6px 9px;
+border-radius:8px;
+}
+
+.points{
+color:#ffd45b;
+font-weight:bold;
+}
+
+.search{
+max-width:300px;
+}
+
+.head-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:15px;
+}
+
+.request{
+background:#151b24;
+border:1px solid #2b3542;
+border-radius:13px;
+padding:15px;
+margin-bottom:12px;
+}
+
+.request img{
+max-width:240px;
+max-height:180px;
+border-radius:10px;
+margin-top:10px;
+display:block;
+}
+
+.request-actions{
+display:flex;
+gap:8px;
+margin-top:12px;
+}
+
+.empty{
+padding:25px;
+text-align:center;
+color:#7f8998;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:#000b;
+z-index:100;
+align-items:center;
+justify-content:center;
+padding:15px;
+}
+
+.modal.show{
+display:flex;
+}
+
+.modal-box{
+width:min(450px,100%);
+background:#11161e;
+border:1px solid #303946;
+border-radius:17px;
+padding:20px;
+}
+
+.modal-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.close{
+background:#303846;
+border:0;
+color:white;
+width:35px;
+height:35px;
+border-radius:9px;
+font-size:20px;
+}
+
+@media(max-width:750px){
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.head-row{
+align-items:stretch;
+flex-direction:column;
+}
+
+.search{
+max-width:none;
+}
+
+.logo{
+font-size:18px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+
+<button class="menu" onclick="openMenu()">☰</button>
+
+<div class="logo">
+LSPD <span>POLICE</span> 🚔
+</div>
+
+<button class="notify" onclick="openNotifications()">
+🔔
+<span class="badge" id="badge">0</span>
+</button>
+
+</header>
+
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<aside class="sidebar" id="sidebar">
+
+<div class="side-title">
+🚔 LSPD
+</div>
+
+<button class="nav active" onclick="page('soldiers',this)">
+👮 جدول العساكر
+</button>
+
+<button class="nav" onclick="page('mdt',this)">
+📡 MDT
+</button>
+
+<button class="nav" onclick="page('attendance',this)">
+🕐 تسجيل الدخول والخروج
+</button>
+
+<button class="nav" onclick="page('leaders',this)">
+👑 قائمة القيادات
+</button>
+
+</aside>
+
+
+<main class="container">
+
+
+<!-- جدول العساكر -->
+
+<section id="soldiers" class="page active">
+
+<div class="hero">
+
+<h1>👮 جدول العساكر</h1>
+
+<p class="muted">
+قائمة أفراد LSPD والرتب والوحدات والنقاط.
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="card">
+<small>إجمالي العساكر</small>
+<div class="big" id="total">0</div>
+</div>
+
+<div class="card">
+<small>داخل الرحلة</small>
+<div class="big" id="inside">0</div>
+</div>
+
+<div class="card">
+<small>مجموع النقاط</small>
+<div class="big" id="points">0</div>
+</div>
+
+<div class="card">
+<small>الرحلة</small>
+<div class="big" id="trip">مغلقة</div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="head-row">
+
+<b>قائمة العساكر</b>
+
+<input
+class="search"
+id="search"
+placeholder="🔎 البحث عن عسكري"
+oninput="renderSoldiers()"
+>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>#</th>
+<th>العسكري</th>
+<th>الرتبة</th>
+<th>اليونت</th>
+<th>النقاط</th>
+<th>الحالة</th>
+</tr>
+
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- MDT -->
+
+<section id="mdt" class="page">
+
+<div class="hero">
+
+<h1>📡 MDT</h1>
+
+<p class="muted">
+إرسال حالة أو تقرير إلى القيادات.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+📤 إرسال حالة
+</div>
+
+<div class="panel-body">
+
+<div class="form">
+
+<input
+id="mdtName"
+placeholder="اسم العسكري"
+>
+
+<input
+id="mdtTitle"
+placeholder="عنوان الحالة"
+>
+
+<textarea
+id="mdtText"
+placeholder="تفاصيل الحالة..."
+></textarea>
+
+<input
+type="file"
+id="mdtFile"
+accept="image/*"
+>
+
+<button
+class="btn blue"
+onclick="sendMDT()"
+>
+📡 إرسال للقيادات
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+📨 طلباتي
+</div>
+
+<div class="panel-body" id="myRequests">
+
+<div class="empty">
+اكتب اسمك في خانة MDT لعرض طلباتك.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- تسجيل الدخول -->
+
+<section id="attendance" class="page">
+
+<div class="hero">
+
+<h1>🕐 تسجيل الدخول والخروج</h1>
+
+<p class="muted">
+لا يمكن التسجيل إلا أثناء فتح الرحلة.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="notice">
+
+حالة الرحلة:
+<strong id="attendanceTrip">
+🔴 مغلقة
+</strong>
+
+</div>
+
+
+<div class="form">
+
+<input
+id="attendanceName"
+placeholder="اسم العسكري"
+>
+
+<button
+id="loginButton"
+class="btn green"
+onclick="login()"
+>
+🟢 تسجيل دخول
+</button>
+
+<button
+id="logoutButton"
+class="btn red"
+onclick="logout()"
+>
+🔴 تسجيل خروج
+</button>
+
+<button
+class="btn yellow"
+onclick="myPoints()"
+>
+⭐ نقاطي
+</button>
+
+</div>
+
+<div
+id="attendanceInfo"
+class="notice"
+style="margin-top:15px"
+>
+لم يتم تسجيل الدخول.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- القيادات -->
+
+<section id="leaders" class="page">
+
+<div class="hero">
+
+<h1>👑 قائمة القيادات</h1>
+
+<p class="muted">
+من هنا تستطيع القيادات التحكم بالنظام.
+</p>
+
+</div>
+
+
+<div id="leaderLogin">
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="form">
+
+<input
+type="password"
+id="password"
+placeholder="🔐 كلمة مرور القيادات"
+>
+
+<button
+class="btn blue"
+onclick="leaderLogin()"
+>
+دخول
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="leaderPanel" style="display:none">
+
+
+<div class="panel">
+
+<div class="panel-title">
+🔓 التحكم بالرحلة
+</div>
+
+<div class="panel-body">
+
+<button
+id="tripButton"
+class="btn green"
+onclick="toggleTrip()"
+>
+🟢 فتح الرحلة
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+➕ إضافة عسكري
+</div>
+
+<div class="panel-body">
+
+<div class="form">
+
+<input
+id="newName"
+placeholder="اسم العسكري"
+>
+
+<input
+id="newRank"
+placeholder="رتبة العسكري"
+>
+
+<input
+id="newUnit"
+placeholder="اليونت"
+>
+
+<button
+class="btn blue"
+onclick="addSoldier()"
+>
+➕ إضافة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+👮 إدارة العساكر
+</div>
+
+<div class="panel-body" id="manageSoldiers"></div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+📨 طلبات MDT
+</div>
+
+<div class="panel-body" id="requests"></div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<!-- الإشعارات -->
+
+<div class="modal" id="notificationModal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+
+<h3>🔔 الإشعارات</h3>
+
+<button class="close" onclick="closeNotifications()">×</button>
+
+</div>
+
+<div id="notifications"></div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+/* =========================
+   البيانات
+========================= */
+
+let soldiers =
+JSON.parse(localStorage.getItem("LSPD_SOLDIERS")) || [];
+
+let requests =
+JSON.parse(localStorage.getItem("LSPD_REQUESTS")) || [];
+
+let notifications =
+JSON.parse(localStorage.getItem("LSPD_NOTIFICATIONS")) || [];
+
+let tripOpen =
+JSON.parse(localStorage.getItem("LSPD_TRIP")) || false;
+
+
+/* كلمة مرور القيادات */
+
+const PASSWORD = "123654";
+
+
+/* =========================
+   حفظ
+========================= */
+
+function save(){
+
+localStorage.setItem(
+"LSPD_SOLDIERS",
+JSON.stringify(soldiers)
+);
+
+localStorage.setItem(
+"LSPD_REQUESTS",
+JSON.stringify(requests)
+);
+
+localStorage.setItem(
+"LSPD_NOTIFICATIONS",
+JSON.stringify(notifications)
+);
+
+localStorage.setItem(
+"LSPD_TRIP",
+JSON.stringify(tripOpen)
+);
+
+}
+
+
+/* =========================
+   القائمة
+========================= */
+
+function openMenu(){
+
+document
+.getElementById("sidebar")
+.classList.add("open");
+
+document
+.getElementById("overlay")
+.classList.add("show");
+
+}
+
+
+function closeMenu(){
+
+document
+.getElementById("sidebar")
+.classList.remove("open");
+
+document
+.getElementById("overlay")
+.classList.remove("show");
+
+}
+
+
+function page(id,btn){
+
+document
+.querySelectorAll(".page")
+.forEach(x=>x.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+
+document
+.querySelectorAll(".nav")
+.forEach(x=>x.classList.remove("active"));
+
+btn.classList.add("active");
+
+closeMenu();
+
+render();
+
+}
+
+
+/* =========================
+   النقاط
+========================= */
+
+function getPoints(s){
+
+let p=s.points || 0;
+
+if(s.inside && s.loginTime){
+
+let minutes =
+(Date.now()-s.loginTime)/60000;
+
+p += Math.floor(minutes/30);
+
+}
+
+return p;
+
+}
+
+
+/* =========================
+   جدول العساكر
+========================= */
+
+function renderSoldiers(){
+
+let search =
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+let list =
+soldiers.filter(s=>
+s.name.toLowerCase().includes(search)
+);
+
+let table =
+document.getElementById("table");
+
+table.innerHTML="";
+
+
+list.forEach((s,i)=>{
+
+let tr=document.createElement("tr");
+
+tr.innerHTML=`
+
+<td>${i+1}</td>
+
+<td>${safe(s.name)}</td>
+
+<td>${safe(s.rank)}</td>
+
+<td>
+<span class="unit">
+${safe(s.unit)}
+</span>
+</td>
+
+<td>
+<span class="points">
+⭐ ${getPoints(s)}
+</span>
+</td>
+
+<td>
+<span class="status ${s.inside?"online":"offline"}">
+${s.inside?"🟢 داخل":"🔴 خارج"}
+</span>
+</td>
+
+`;
+
+table.appendChild(tr);
+
+});
+
+
+document.getElementById("total")
+.textContent=soldiers.length;
+
+document.getElementById("inside")
+.textContent=
+soldiers.filter(s=>s.inside).length;
+
+document.getElementById("points")
+.textContent=
+soldiers.reduce(
+(a,s)=>a+getPoints(s),0
+);
+
+document.getElementById("trip")
+.textContent=
+tripOpen?"مفتوحة":"مغلقة";
+
+}
+
+
+/* =========================
+   فتح وإغلاق الرحلة
+========================= */
+
+function toggleTrip(){
+
+if(tripOpen){
+
+/* تثبيت النقاط */
+
+soldiers.forEach(s=>{
+
+if(s.inside){
+
+s.points=getPoints(s);
+
+s.inside=false;
+
+s.loginTime=null;
+
+}
+
+});
+
+tripOpen=false;
+
+}else{
+
+tripOpen=true;
+
+}
+
+save();
+
+render();
+
+}
+
+
+/* =========================
+   تسجيل الدخول
+========================= */
+
+function login(){
+
+if(!tripOpen){
+
+alert(
+"🔴 الرحلة مغلقة!\nلا يمكنك تسجيل الدخول الآن."
+);
+
+return;
+
+}
+
+
+let name =
+document
+.getElementById("attendanceName")
+.value.trim();
+
+
+let s =
+findSoldier(name);
+
+
+if(!s){
+
+alert("❌ العسكري غير موجود.");
+
+return;
+
+}
+
+
+if(s.inside){
+
+alert("⚠️ أنت مسجل دخول بالفعل.");
+
+return;
+
+}
+
+
+s.inside=true;
+
+s.loginTime=Date.now();
+
+
+save();
+
+render();
+
+
+document
+.getElementById("attendanceInfo")
+.textContent=
+"🟢 تم تسجيل دخول "+s.name+" بنجاح.";
+
+}
+
+
+/* =========================
+   تسجيل الخروج
+========================= */
+
+function logout(){
+
+if(!tripOpen){
+
+alert(
+"🔴 الرحلة مغلقة!"
+);
+
+return;
+
+}
+
+
+let name =
+document
+.getElementById("attendanceName")
+.value.trim();
+
+
+let s=findSoldier(name);
+
+
+if(!s){
+
+alert("❌ العسكري غير موجود.");
+
+return;
+
+}
+
+
+if(!s.inside){
+
+alert("⚠️ أنت غير مسجل دخول.");
+
+return;
+
+}
+
+
+let earned =
+getPoints(s)-s.points;
+
+
+s.points=getPoints(s);
+
+s.inside=false;
+
+s.loginTime=null;
+
+
+save();
+
+render();
+
+
+document
+.getElementById("attendanceInfo")
+.textContent=
+"🔴 تم تسجيل خروجك.\nالنقاط الجديدة: +"+earned;
+
+}
+
+
+/* =========================
+   نقاطي
+========================= */
+
+function myPoints(){
+
+let name =
+document
+.getElementById("attendanceName")
+.value.trim();
+
+let s=findSoldier(name);
+
+
+if(!s){
+
+alert("❌ العسكري غير موجود.");
+
+return;
+
+}
+
+
+alert(
+"⭐ نقاط "+s.name+": "+getPoints(s)
+);
+
+}
+
+
+/* =========================
+   إضافة عسكري
+========================= */
+
+function addSoldier(){
+
+let name=
+document.getElementById("newName")
+.value.trim();
+
+let rank=
+document.getElementById("newRank")
+.value.trim();
+
+let unit=
+document.getElementById("newUnit")
+.value.trim();
+
+
+if(!name||!rank||!unit){
+
+alert("❌ أكمل جميع البيانات.");
+
+return;
+
+}
+
+
+if(findSoldier(name)){
+
+alert("❌ هذا العسكري موجود بالفعل.");
+
+return;
+
+}
+
+
+soldiers.push({
+
+id:Date.now(),
+
+name:name,
+
+rank:rank,
+
+unit:unit,
+
+points:0,
+
+inside:false,
+
+loginTime:null
+
+});
+
+
+document.getElementById("newName").value="";
+document.getElementById("newRank").value="";
+document.getElementById("newUnit").value="";
+
+
+save();
+
+render();
+
+alert("✅ تمت إضافة العسكري.");
+
+}
+
+
+/* =========================
+   إزالة عسكري
+========================= */
+
+function removeSoldier(id){
+
+let s=
+soldiers.find(x=>x.id===id);
+
+if(!s)return;
+
+
+if(!confirm(
+"هل تريد إزالة "+s.name+"؟"
+))return;
+
+
+soldiers=
+soldiers.filter(x=>x.id!==id);
+
+save();
+
+render();
+
+}
+
+
+/* =========================
+   دخول القيادات
+========================= */
+
+function leaderLogin(){
+
+let pass=
+document
+.getElementById("password")
+.value;
+
+
+if(pass!==PASSWORD){
+
+alert("❌ كلمة المرور خاطئة.");
+
+return;
+
+}
+
+
+document
+.getElementById("leaderLogin")
+.style.display="none";
+
+document
+.getElementById("leaderPanel")
+.style.display="block";
+
+render();
+
+}
+
+
+/* =========================
+   إدارة العساكر
+========================= */
+
+function renderManage(){
+
+let box=
+document
+.getElementById("manageSoldiers");
+
+
+if(!soldiers.length){
+
+box.innerHTML=
+'<div class="empty">لا يوجد عساكر.</div>';
+
+return;
+
+}
+
+
+box.innerHTML=
+soldiers.map(s=>`
+
+<div class="request">
+
+<b>${safe(s.name)}</b>
+
+<p class="muted">
+الرتبة: ${safe(s.rank)}
+<br>
+اليونت: ${safe(s.unit)}
+<br>
+النقاط: ⭐ ${getPoints(s)}
+</p>
+
+<button
+class="btn red"
+onclick="removeSoldier(${s.id})"
+>
+🗑️ إزالة
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   MDT
+========================= */
+
+function sendMDT(){
+
+let name=
+document.getElementById("mdtName")
+.value.trim();
+
+let title=
+document.getElementById("mdtTitle")
+.value.trim();
+
+let text=
+document.getElementById("mdtText")
+.value.trim();
+
+let file=
+document.getElementById("mdtFile")
+.files[0];
+
+
+if(!name||!title||!text){
+
+alert("❌ أكمل بيانات الحالة.");
+
+return;
+
+}
+
+
+if(!findSoldier(name)){
+
+alert("❌ اسم العسكري غير موجود.");
+
+return;
+
+}
+
+
+function create(image){
+
+requests.push({
+
+id:Date.now(),
+
+name:name,
+
+title:title,
+
+text:text,
+
+image:image||"",
+
+status:"pending",
+
+time:Date.now()
+
+});
+
+
+notifications.push({
+
+id:Date.now()+1,
+
+type:"leader",
+
+title:"📨 طلب MDT جديد",
+
+message:
+name+" أرسل حالة جديدة."
+
+});
+
+
+save();
+
+render();
+
+alert("✅ تم إرسال الحالة للقيادات.");
+
+}
+
+
+if(file){
+
+let reader=new FileReader();
+
+reader.onload=e=>
+create(e.target.result);
+
+reader.readAsDataURL(file);
+
+}else{
+
+create("");
+
+}
+
+}
+
+
+/* =========================
+   قبول الطلب
+========================= */
+
+function acceptRequest(id){
+
+let r=
+requests.find(x=>x.id===id);
+
+if(!r)return;
+
+
+r.status="accepted";
+
+
+let s=findSoldier(r.name);
+
+
+if(s){
+
+s.points+=10;
+
+}
+
+
+notifications.push({
+
+id:Date.now(),
+
+type:"soldier",
+
+target:r.name,
+
+title:"✅ تم قبول طلبك",
+
+message:
+"تم قبول طلب MDT الخاص بك وإضافة 10 نقاط."
+
+});
+
+
+save();
+
+render();
+
+alert(
+"✅ تم قبول الطلب وإضافة 10 نقاط."
+);
+
+}
+
+
+/* =========================
+   رفض الطلب
+========================= */
+
+function rejectRequest(id){
+
+let r=
+requests.find(x=>x.id===id);
+
+if(!r)return;
+
+
+r.status="rejected";
+
+
+notifications.push({
+
+id:Date.now(),
+
+type:"soldier",
+
+target:r.name,
+
+title:"❌ تم رفض طلبك",
+
+message:
+"تم رفض طلب MDT الخاص بك."
+
+});
+
+
+save();
+
+render();
+
+alert("❌ تم رفض الطلب.");
+
+}
+
+
+/* =========================
+   عرض طلبات القيادات
+========================= */
+
+function renderRequests(){
+
+let box=
+document.getElementById("requests");
+
+
+let list=
+requests.filter(
+r=>r.status==="pending"
+);
+
+
+if(!list.length){
+
+box.innerHTML=
+'<div class="empty">لا توجد طلبات جديدة.</div>';
+
+return;
+
+}
+
+
+box.innerHTML=
+list.map(r=>`
+
+<div class="request">
+
+<b>📨 ${safe(r.title)}</b>
+
+<p>
+العسكري:
+<strong>${safe(r.name)}</strong>
+</p>
+
+<p class="muted">
+${safe(r.text)}
+</p>
+
+${
+r.image
+?
+`<img src="${r.image}">`
+:
+""
+}
+
+<div class="request-actions">
+
+<button
+class="btn green"
+onclick="acceptRequest(${r.id})"
+>
+✅ قبول +10
+</button>
+
+<button
+class="btn red"
+onclick="rejectRequest(${r.id})"
+>
+❌ رفض
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   طلباتي
+========================= */
+
+function renderMyRequests(){
+
+let name=
+document
+.getElementById("mdtName")
+.value.trim();
+
+
+let box=
+document.getElementById("myRequests");
+
+
+if(!name){
+
+box.innerHTML=
+'<div class="empty">اكتب اسمك في MDT.</div>';
+
+return;
+
+}
+
+
+let list=
+requests.filter(
+r=>r.name.toLowerCase()===name.toLowerCase()
+);
+
+
+if(!list.length){
+
+box.innerHTML=
+'<div class="empty">لا توجد طلبات.</div>';
+
+return;
+
+}
+
+
+box.innerHTML=
+list.map(r=>`
+
+<div class="request">
+
+<b>${safe(r.title)}</b>
+
+<p class="muted">
+${safe(r.text)}
+</p>
+
+${
+r.status==="accepted"
+?
+'<span class="status online">✅ مقبول +10</span>'
+:
+r.status==="rejected"
+?
+'<span class="status offline">❌ مرفوض</span>'
+:
+'<span class="status">⏳ قيد المراجعة</span>'
+}
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   الإشعارات
+========================= */
+
+function openNotifications(){
+
+let box=
+document.getElementById("notifications");
+
+
+if(!notifications.length){
+
+box.innerHTML=
+'<div class="empty">لا توجد إشعارات.</div>';
+
+}else{
+
+box.innerHTML=
+notifications
+.slice()
+.reverse()
+.map(n=>`
+
+<div class="request">
+
+<b>${safe(n.title)}</b>
+
+<p>${safe(n.message)}</p>
+
+</div>
+
+`).join("");
+
+}
+
+
+document
+.getElementById("notificationModal")
+.classList.add("show");
+
+}
+
+
+function closeNotifications(){
+
+document
+.getElementById("notificationModal")
+.classList.remove("show");
+
+}
+
+
+/* 
