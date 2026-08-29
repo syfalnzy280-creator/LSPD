@@ -31,7 +31,7 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 </style>
 </head>
 <body>
-<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">اكتب اسمك المسجل من القيادة فقط</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك العسكري"><button class="btn blue" onclick="window.authLogin()">🚪 دخول</button><div id="authMsg" style="color:#ffd45b;margin-top:10px;min-height:18px"></div></div></div></div>
+<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">أول واحد يدخل يصير القيادة</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك العسكري"><button class="btn blue" onclick="window.authLogin()">🚪 دخول</button><div id="authMsg" style="color:#ffd45b;margin-top:10px;min-height:18px"></div></div></div></div>
 <header class="top"><button class="menu" id="menuBtn">☰</button><div class="logo">LSPD <span>POLICE</span></div><button class="notify" id="notifyBtn">🔔<span class="badge" id="badge">0</span></button><button class="logout" id="logoutBtn">🚪</button></header>
 <div class="overlay" id="overlay"></div>
 <aside class="sidebar" id="sidebar"><div style="font-size:22px;font-weight:bold;margin-bottom:25px">🚔 LSPD</div>
@@ -48,14 +48,9 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 <div class="panel"><div class="panel-title">📨 طلباتي</div><div class="panel-body" id="myRequests"></div></div></section>
 <section id="attendance" class="page"><div class="hero"><h1>🕐 الدخول والخروج</h1></div>
 <div class="panel"><div class="panel-body"><div>الرحلة: <strong id="attendanceTrip">🔴 مغلقة</strong></div><div class="form" style="margin-top:15px"><input id="attendanceName" disabled><button id="loginButton" class="btn green">🟢 دخول</button><button id="logoutButton" class="btn red">🔴 خروج</button><button id="myPointsBtn" class="btn yellow">⭐ نقاطي</button></div><div id="attendanceInfo" style="margin-top:15px" class="muted"></div></div></div></section>
-<section id="protocols" class="page">
-<div class="hero"><h1>📜 Police Protocols</h1></div>
-<div class="panel"><div class="panel-title">📡 أكواد الراديو</div><div class="panel-body" style="padding:0"><table><thead><tr><th>الكود</th><th>المعنى</th></tr></thead><tbody>
-<tr><td>10-4</td><td>علم</td></tr><tr><td>10-2</td><td>غير صحيح</td></tr><tr><td>0-2</td><td>مرر</td></tr><tr><td>0-3</td><td>تسمعني ؟</td></tr><tr><td>0-7</td><td>خروج</td></tr><tr><td>0-8</td><td>دخول</td></tr>
-</tbody></table></div></div>
-</section>
+<section id="protocols" class="page"><div class="hero"><h1>📜 Police Protocols</h1></div><div class="panel"><div class="panel-title">📡 أكواد الراديو</div><div class="panel-body" style="padding:0"><table><thead><tr><th>الكود</th><th>المعنى</th></tr></thead><tbody><tr><td>10-4</td><td>علم</td></tr><tr><td>0-7</td><td>خروج</td></tr><tr><td>0-8</td><td>دخول</td></tr></tbody></table></div></div></section>
 <section id="leaders" class="page"><div class="hero"><h1>👑 القيادات</h1></div>
-<div id="leaderLogin"><div class="panel"><div class="panel-body"><div class="form"><input type="password" id="password" placeholder="🔐 كلمة المرور 123654"><button class="btn blue" id="leaderLoginBtn">دخول</button></div></div></div></div>
+<div id="leaderLogin"><div class="panel"><div class="panel-body"><div class="form"><input type="password" id="password" placeholder="🔐 123654"><button class="btn blue" id="leaderLoginBtn">دخول</button></div></div></div></div>
 <div id="leaderPanel" style="display:none">
 <div class="panel"><div class="panel-title">🔓 التحكم بالرحلة</div><div class="panel-body"><button id="tripButton" class="btn green">🟢 فتح</button></div></div>
 <div class="panel"><div class="panel-title">➕ إضافة عسكري</div><div class="panel-body"><div class="form"><input id="newName" placeholder="اسم العسكري"><input id="newRank" placeholder="الرتبة"><input id="newUnit" placeholder="اليونت"><button class="btn blue" id="addSoldierBtn">➕ إضافة</button></div></div></div>
@@ -95,10 +90,13 @@ window.authLogin=async()=>{
 let n=document.getElementById("authName").value.trim();let msg=document.getElementById("authMsg");
 if(!n){msg.innerText="اكتب اسمك";return}msg.innerText="⏳ جاري...";
 let s=findSoldier(n);
-if(!s){
-msg.innerText="❌ غير موجود - تواصل مع القيادة لإضافتك";
-return;
-}else{currentUser=s.name;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();}
+if(soldiers.length===0){
+let id=Date.now().toString();
+await setDoc(doc(db,"soldiers",id),{id:id,name:n,rank:"لواء",unit:"A-1",points:0,inside:false,loginTime:null,created:Date.now()});
+currentUser=n;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();return;
+}
+if(!s){msg.innerText="❌ غير موجود - لازم القيادة تضيفك";return;}
+else{currentUser=s.name;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();}
 };
 function logoutUser(){if(confirm("خروج؟")){currentUser="";localStorage.removeItem("LSPD_CURRENT_USER");checkAuth();}}
 function renderWelcome(){let s=findSoldier(currentUser);if(!s)return;document.getElementById("welcomeBox").innerHTML=`<div class="welcome">👋 مرحبا <b>${esc(s.name)}</b> | <span class="points">⭐ ${getPoints(s)}</span></div>`;document.getElementById("attendanceInfo").textContent=`نقاطك: ${getPoints(s)}`;}
@@ -112,7 +110,7 @@ async function logout(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=fi
 function myPoints(){let s=findSoldier(currentUser);alert("⭐ "+s.name+": "+getPoints(s));}
 async function addSoldier(){let a=document.getElementById("newName").value.trim();let b=document.getElementById("newRank").value.trim()||"عسكري";let c=document.getElementById("newUnit").value.trim()||"A-1";if(!a){alert("❌ اكتب الاسم");return;}if(findSoldier(a)){alert("موجود.");return;}let id=Date.now().toString();await setDoc(doc(db,"soldiers",id),{id:id,name:a,rank:b,unit:c,points:0,inside:false,loginTime:null,created:Date.now()});document.getElementById("newName").value="";document.getElementById("newRank").value="";document.getElementById("newUnit").value="";}
 async function removeSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("حذف "+s.name+"؟"))return;await deleteDoc(doc(db,"soldiers",s.id));}
-function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌ كلمة المرور غلط");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
+function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌ غلط");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
 function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value||soldiers[0].id;sel.innerHTML=soldiers.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)} - ⭐ ${getPoints(s)}</option>`).join("");let s=findById(currentId)||soldiers[0];if(!s)return;document.getElementById("selectedCard").innerHTML=`<div class="request" style="background:#0f1a2a;border-color:#2a3d5a"><div style="display:flex;justify-content:space-between"><div><b style="font-size:18px">${esc(s.name)}</b><br><span class="muted">${esc(s.rank)} | ${esc(s.unit)}</span><br><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span> <span class="points" style="font-size:18px">⭐ ${getPoints(s)}</span></div><div style="font-size:35px">👮</div></div></div>`;document.getElementById("pointsPreview").textContent=`المحدد: ${s.name} | نقاطه: ${getPoints(s)}`;}
 async function handlePoints(act){let sel=document.getElementById("pointsSelect");let inp=document.getElementById("pointsAmount");let s=findById(sel.value);if(!s)return;let v=parseInt(inp.value)||0;let np=s.points||0;if(act=="add")np+=v;if(act=="remove")np=Math.max(0,np-v);if(act=="set")np=v;await updateDoc(doc(db,"soldiers",s.id),{points:np,loginTime:s.inside?Date.now():null});}
 async function resetSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("تصفير "+s.name+"؟"))return;await updateDoc(doc(db,"soldiers",s.id),{points:0,loginTime:s.inside?Date.now():null});}
@@ -120,4 +118,6 @@ async function sendMDT(){let title=document.getElementById("mdtTitle").value.tri
 async function acceptRequest(id){let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await updateDoc(doc(db,"requests",id),{status:"accepted"});let s=findSoldier(r.name);if(s)await updateDoc(doc(db,"soldiers",s.id),{points:(s.points||0)+10});await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"✅ قبول",message:"+10 نقاط!",time:Date.now()});}
 async function rejectRequest(id){await updateDoc(doc(db,"requests",id),{status:"rejected"});let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"❌ رفض",message:"تم الرفض.",time:Date.now()});}
 window.acceptRequest=acceptRequest;window.rejectRequest=rejectRequest;
-function renderRequests(){let box=document.getElementById("requests");let list=requests.filter(r=>r.status=="pending");if(!list.length){box.innerHTML='<div class="empty">لا توجد طلبات.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>📨 ${esc(r.title)}</b><p>${esc(r.name)}</p><p class="muted">${esc(r.text)}</p>${r.image?`<img src="${r.image}" style="max-width:200px;border-radius:8px;margin-top:8px">`:""}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="acceptRequest('${r.id}')">✅ قبول +10</button><button class="btn red" onclick="rejectRequest('${r.id
+function renderRequests(){let box=document.getElementById("requests");let list=requests.filter(r=>r.status=="pending");if(!list.length){box.innerHTML='<div class="empty">لا توجد طلبات.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>📨 ${esc(r.title)}</b><p>${esc(r.name)}</p><p class="muted">${esc(r.text)}</p>${r.image?`<img src="${r.image}" style="max-width:200px;border-radius:8px;margin-top:8px">`:""}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="acceptRequest('${r.id}')">✅ قبول +10</button><button class="btn red" onclick="rejectRequest('${r.id}')">❌ رفض</button></div></div>`).join("");}
+function renderMyRequests(){let box=document.getElementById("myRequests");let list=requests.filter(r=>r.name.toLowerCase()==currentUser.toLowerCase());if(!list.length){box.innerHTML='<div class="empty">لا يوجد.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>${esc(r.title)}</b><p class="muted">${esc(r.text)}</p>${r.status=="accepted"?'<span class="status online">✅ مقبول</span>':r.status=="rejected"?'<span class="status offline">❌ مرفوض</span>':'⏳ قيد المراجعة'}</div>`).join("");}
+function openNotifications(){let box=document.getElementById("notifications");let my=notifications.filter(n=>n.target&&n.target.toLowerCase()==currentUser.toLowerCase());box.innerHTML=m
