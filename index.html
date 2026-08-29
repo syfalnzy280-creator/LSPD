@@ -1,236 +1,1017 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ICONIC RP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<title>ICONIC RP | نظام العساكر</title>
 
-    body {
-      background: #0b0b0f;
-      color: white;
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    background: #0f1015;
+    color: white;
+}
+
+header {
+    background: #191a21;
+    border-bottom: 1px solid #30313b;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #8b5cf6;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 25px 15px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #1c1d26, #15161c);
+    border: 1px solid #30313b;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    margin-top: 0;
+}
+
+.muted {
+    color: #999;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #191a21;
+    border: 1px solid #30313b;
+    border-radius: 15px;
+    padding: 18px;
+}
+
+.card-title {
+    color: #999;
+    font-size: 13px;
+}
+
+.number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.panel {
+    background: #191a21;
+    border: 1px solid #30313b;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.toolbar {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input, select {
+    background: #22232b;
+    border: 1px solid #393a45;
+    color: white;
+    border-radius: 10px;
+    padding: 11px;
+    outline: none;
+}
+
+.search {
+    flex: 1;
+    min-width: 200px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: #8b5cf6;
+    color: white;
+}
+
+.danger {
+    background: #ef4444;
+    color: white;
+}
+
+.secondary {
+    background: #30313a;
+    color: white;
+}
+
+.success {
+    background: #22c55e;
+    color: white;
+}
+
+button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    text-align: right;
+    border-bottom: 1px solid #2c2d36;
+    white-space: nowrap;
+}
+
+th {
+    color: #999;
+    font-size: 13px;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.inside {
+    background: #163d27;
+    color: #5ee890;
+}
+
+.outside {
+    background: #3d1b1b;
+    color: #ff7777;
+}
+
+.trip-open {
+    color: #5ee890;
+}
+
+.trip-closed {
+    color: #ff7777;
+}
+
+/* النوافذ */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    z-index: 10;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 430px;
+    background: #191a21;
+    border: 1px solid #363741;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.form {
+    display: grid;
+    gap: 12px;
+}
+
+.form input,
+.form select {
+    width: 100%;
+}
+
+/* الجوال */
+
+@media(max-width: 750px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     header {
-      height: 75px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 7%;
-      background: #111116;
-      border-bottom: 1px solid #24242c;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+        padding: 14px;
     }
 
     .logo {
-      font-size: 25px;
-      font-weight: bold;
-      letter-spacing: 2px;
+        font-size: 20px;
     }
 
-    nav a {
-      color: #aaa;
-      text-decoration: none;
-      margin: 0 12px;
-      transition: 0.3s;
+    .container {
+        padding: 15px 10px;
     }
 
-    nav a:hover {
-      color: white;
+    th, td {
+        padding: 11px 8px;
     }
-
-    .hero {
-      min-height: 85vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 20px;
-      background:
-        radial-gradient(circle at center, #252530 0%, #0b0b0f 55%);
-    }
-
-    .hero h1 {
-      font-size: 65px;
-      margin-bottom: 15px;
-    }
-
-    .hero h1 span {
-      color: #8b5cf6;
-    }
-
-    .hero p {
-      color: #aaa;
-      font-size: 18px;
-      margin-bottom: 30px;
-    }
-
-    .buttons a {
-      display: inline-block;
-      padding: 14px 28px;
-      margin: 5px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      background: #8b5cf6;
-      color: white;
-      transition: 0.3s;
-    }
-
-    .buttons a:hover {
-      transform: translateY(-3px);
-      opacity: 0.85;
-    }
-
-    .section {
-      padding: 80px 8%;
-      text-align: center;
-    }
-
-    .section h2 {
-      font-size: 35px;
-      margin-bottom: 40px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: #15151c;
-      border: 1px solid #252530;
-      padding: 30px;
-      border-radius: 15px;
-      transition: 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: #8b5cf6;
-    }
-
-    .card h3 {
-      margin-bottom: 12px;
-    }
-
-    .card p {
-      color: #999;
-      line-height: 1.7;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      background: #111116;
-      color: #777;
-      border-top: 1px solid #24242c;
-    }
-
-    @media (max-width: 600px) {
-      .hero h1 {
-        font-size: 45px;
-      }
-
-      nav a {
-        margin: 0 5px;
-        font-size: 13px;
-      }
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">ICONIC RP</div>
+<header>
 
-    <nav>
-      <a href="#home">الرئيسية</a>
-      <a href="#about">عن السيرفر</a>
-      <a href="#features">المميزات</a>
-      <a href="#contact">تواصل معنا</a>
-    </nav>
-  </header>
-
-  <section class="hero" id="home">
     <div>
-      <h1>مرحبًا بك في <span>ICONIC RP</span></h1>
-      <p>عش تجربة Roleplay مختلفة واصنع قصتك بنفسك.</p>
+        <div class="logo">
+            ICONIC <span>RP</span> 🪖
+        </div>
 
-      <div class="buttons">
-        <a href="#">دخول السيرفر</a>
-        <a href="#">ديسكورد</a>
-      </div>
+        <small class="muted">
+            نظام إدارة العساكر
+        </small>
     </div>
-  </section>
 
-  <section class="section" id="about">
-    <h2>عن ICONIC RP</h2>
+    <button class="secondary" onclick="openAdmin()">
+        لوحة الإدارة
+    </button>
 
-    <div class="cards">
-      <div class="card">
-        <h3>🎭 تجربة واقعية</h3>
-        <p>نظام لعب يركز على تقديم تجربة Roleplay ممتعة وواقعية.</p>
-      </div>
+</header>
 
-      <div class="card">
-        <h3>👮 وظائف متعددة</h3>
-        <p>اختر مسارك وابدأ رحلتك داخل المدينة.</p>
-      </div>
 
-      <div class="card">
-        <h3>🌆 مدينة متكاملة</h3>
-        <p>عالم مفتوح مليء بالفعاليات والقصص والمغامرات.</p>
-      </div>
+<div class="container">
+
+    <section class="hero">
+
+        <h1>🪖 عساكر ICONIC RP</h1>
+
+        <p class="muted">
+            نظام تسجيل الدخول والخروج واحتساب النقاط.
+        </p>
+
+        <p>
+            حالة الرحلة:
+            <strong id="tripStatus" class="trip-closed">
+                مغلقة 🔴
+            </strong>
+        </p>
+
+    </section>
+
+
+    <div class="stats">
+
+        <div class="card">
+            <div class="card-title">
+                إجمالي العساكر
+            </div>
+
+            <div class="number" id="total">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                داخل الرحلة
+            </div>
+
+            <div class="number" id="inside">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                مجموع النقاط
+            </div>
+
+            <div class="number" id="allPoints">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                حالة الرحلة
+            </div>
+
+            <div class="number" id="tripText">
+                مغلقة
+            </div>
+        </div>
+
     </div>
-  </section>
 
-  <section class="section" id="features">
-    <h2>مميزات السيرفر</h2>
 
-    <div class="cards">
-      <div class="card">
-        <h3>نظام اقتصادي</h3>
-        <p>اقتصاد متوازن وفرص متعددة لكسب المال.</p>
-      </div>
+    <div class="panel">
 
-      <div class="card">
-        <h3>إدارة احترافية</h3>
-        <p>فريق إداري لمساعدتك والحفاظ على جودة التجربة.</p>
-      </div>
+        <div class="toolbar">
 
-      <div class="card">
-        <h3>فعاليات مستمرة</h3>
-        <p>فعاليات وأنشطة متنوعة داخل المدينة.</p>
-      </div>
+            <input
+                class="search"
+                id="search"
+                placeholder="🔎 ابحث عن العسكري..."
+                oninput="render()"
+            >
+
+            <button
+                class="primary"
+                onclick="openAddSoldier()"
+            >
+                ➕ إضافة عسكري
+            </button>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>العسكري</th>
+                        <th>الرتبة</th>
+                        <th>النقاط ⭐</th>
+                        <th>الحالة</th>
+                        <th>تسجيل</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="soldiersTable"></tbody>
+
+            </table>
+
+        </div>
+
     </div>
-  </section>
 
-  <section class="section" id="contact">
-    <h2>تواصل معنا</h2>
-    <p style="color:#999; margin-bottom:25px;">
-      انضم إلى مجتمع ICONIC RP وكن جزءًا من التجربة.
-    </p>
+</div>
 
-    <div class="buttons">
-      <a href="#">Discord</a>
+
+<!-- لوحة الإدارة -->
+
+<div class="modal" id="adminModal">
+
+    <div class="modal-box">
+
+        <h2>🔐 لوحة الإدارة</h2>
+
+        <div id="adminLogin">
+
+            <div class="form">
+
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="كلمة مرور الإدارة"
+                >
+
+                <button
+                    class="primary"
+                    onclick="loginAdmin()"
+                >
+                    دخول
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="closeAdmin()"
+                >
+                    إلغاء
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div id="adminPanel" style="display:none">
+
+            <h3>
+                ⚙️ التحكم بالرحلة
+            </h3>
+
+            <button
+                id="tripButton"
+                class="success"
+                onclick="toggleTrip()"
+            >
+                فتح الرحلة
+            </button>
+
+
+            <hr style="border-color:#30313b;margin:20px 0">
+
+
+            <h3>
+                ➕ إضافة عسكري
+            </h3>
+
+            <div class="form">
+
+                <input
+                    id="soldierName"
+                    placeholder="اسم العسكري"
+                >
+
+                <select id="soldierRank">
+
+                    <option>جندي</option>
+                    <option>جندي أول</option>
+                    <option>عريف</option>
+                    <option>وكيل رقيب</option>
+                    <option>رقيب</option>
+                    <option>رقيب أول</option>
+                    <option>رئيس رقباء</option>
+                    <option>ملازم</option>
+                    <option>ملازم أول</option>
+                    <option>نقيب</option>
+                    <option>رائد</option>
+                    <option>مقدم</option>
+                    <option>عقيد</option>
+
+                </select>
+
+                <button
+                    class="primary"
+                    onclick="addSoldier()"
+                >
+                    إضافة
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="closeAdmin()"
+                >
+                    إغلاق
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
-  </section>
 
-  <footer>
-    © 2026 ICONIC RP — جميع الحقوق محفوظة
-  </footer>
+</div>
+
+
+<script>
+
+/* =========================
+   البيانات
+========================= */
+
+let soldiers =
+    JSON.parse(localStorage.getItem("iconic_soldiers")) || [];
+
+let tripOpen =
+    JSON.parse(localStorage.getItem("iconic_trip")) || false;
+
+
+/* =========================
+   الحفظ
+========================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        "iconic_soldiers",
+        JSON.stringify(soldiers)
+    );
+
+    localStorage.setItem(
+        "iconic_trip",
+        JSON.stringify(tripOpen)
+    );
+}
+
+
+/* =========================
+   حساب النقاط
+========================= */
+
+function getPoints(soldier) {
+
+    let points = soldier.points || 0;
+
+    /*
+       إذا العسكري داخل الرحلة:
+       كل 30 دقيقة = نقطة
+    */
+
+    if (
+        soldier.inside &&
+        soldier.loginTime
+    ) {
+
+        let elapsed =
+            Date.now() - soldier.loginTime;
+
+        let earned =
+            Math.floor(elapsed / (30 * 60 * 1000));
+
+        return points + earned;
+    }
+
+    return points;
+}
+
+
+/* =========================
+   عرض الموقع
+========================= */
+
+function render() {
+
+    let search =
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    let list =
+        soldiers.filter(s =>
+            s.name.toLowerCase().includes(search)
+        );
+
+    let table =
+        document.getElementById("soldiersTable");
+
+    table.innerHTML = "";
+
+    list.forEach((soldier, index) => {
+
+        let points =
+            getPoints(soldier);
+
+        let row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>${index + 1}</td>
+
+            <td>
+                ${escapeHTML(soldier.name)}
+            </td>
+
+            <td>
+                ${escapeHTML(soldier.rank)}
+            </td>
+
+            <td>
+                ⭐ ${points}
+            </td>
+
+            <td>
+
+                <span class="status ${
+                    soldier.inside
+                    ? "inside"
+                    : "outside"
+                }">
+
+                    ${
+                        soldier.inside
+                        ? "🟢 داخل"
+                        : "🔴 خارج"
+                    }
+
+                </span>
+
+            </td>
+
+            <td>
+
+                ${
+                    soldier.inside
+
+                    ?
+
+                    `
+                    <button
+                        class="danger"
+                        onclick="logoutSoldier(${soldier.id})"
+                        ${!tripOpen ? "disabled" : ""}
+                    >
+                        تسجيل خروج
+                    </button>
+                    `
+
+                    :
+
+                    `
+                    <button
+                        class="primary"
+                        onclick="loginSoldier(${soldier.id})"
+                        ${!tripOpen ? "disabled" : ""}
+                    >
+                        تسجيل دخول
+                    </button>
+                    `
+                }
+
+                <button
+                    class="danger"
+                    onclick="deleteSoldier(${soldier.id})"
+                >
+                    🗑️
+                </button>
+
+            </td>
+
+        `;
+
+        table.appendChild(row);
+
+    });
+
+
+    /* الإحصائيات */
+
+    document.getElementById("total").textContent =
+        soldiers.length;
+
+    document.getElementById("inside").textContent =
+        soldiers.filter(s => s.inside).length;
+
+    document.getElementById("allPoints").textContent =
+        soldiers.reduce(
+            (sum, s) => sum + getPoints(s),
+            0
+        );
+
+
+    document.getElementById("tripText").textContent =
+        tripOpen ? "مفتوحة" : "مغلقة";
+
+
+    let status =
+        document.getElementById("tripStatus");
+
+    status.textContent =
+        tripOpen
+        ? "مفتوحة 🟢"
+        : "مغلقة 🔴";
+
+    status.className =
+        tripOpen
+        ? "trip-open"
+        : "trip-closed";
+
+
+    document.getElementById("tripButton").textContent =
+        tripOpen
+        ? "🔴 إغلاق الرحلة"
+        : "🟢 فتح الرحلة";
+
+    document.getElementById("tripButton").className =
+        tripOpen
+        ? "danger"
+        : "success";
+}
+
+
+/* =========================
+   فتح الرحلة
+========================= */
+
+function toggleTrip() {
+
+    if (tripOpen) {
+
+        /*
+           عند إغلاق الرحلة:
+           تثبيت نقاط كل العسكريين الموجودين
+        */
+
+        soldiers.forEach(soldier => {
+
+            if (
+                soldier.inside &&
+                soldier.loginTime
+            ) {
+
+                soldier.points =
+                    getPoints(soldier);
+
+                soldier.inside = false;
+
+                soldier.loginTime = null;
+
+            }
+
+        });
+
+        tripOpen = false;
+
+    } else {
+
+        tripOpen = true;
+
+    }
+
+    saveData();
+
+    render();
+}
+
+
+/* =========================
+   تسجيل الدخول
+========================= */
+
+function loginSoldier(id) {
+
+    /*
+       حماية مهمة:
+       لا يمكن التسجيل إذا الرحلة مغلقة
+    */
+
+    if (!tripOpen) {
+
+        alert(
+            "🔴 لا يمكن تسجيل الدخول!\n\nالرحلة مغلقة حالياً."
+        );
+
+        return;
+    }
+
+
+    let soldier =
+        soldiers.find(s => s.id === id);
+
+    if (!soldier) return;
+
+
+    soldier.inside = true;
+
+    soldier.loginTime = Date.now();
+
+
+    saveData();
+
+    render();
+}
+
+
+/* =========================
+   تسجيل الخروج
+========================= */
+
+function logoutSoldier(id) {
+
+    /*
+       لا يمكن تسجيل الخروج
+       إذا الرحلة مغلقة
+    */
+
+    if (!tripOpen) {
+
+        alert(
+            "🔴 لا يمكن تسجيل الخروج!\n\nالرحلة مغلقة حالياً."
+        );
+
+        return;
+    }
+
+
+    let soldier =
+        soldiers.find(s => s.id === id);
+
+    if (!soldier) return;
+
+
+    /*
+       تثبيت النقاط
+    */
+
+    soldier.points =
+        getPoints(soldier);
+
+
+    soldier.inside = false;
+
+    soldier.loginTime = null;
+
+
+    saveData();
+
+    render();
+}
+
+
+/* =========================
+   إضافة عسكري
+========================= */
+
+function addSoldier() {
+
+    let name =
+        document
+        .getElementById("soldierName")
+        .value
+        .trim();
+
+    let rank =
+        document
+        .getElementById("soldierRank")
+        .value;
+
+
+    if (!name) {
+
+        alert("اكتب اسم العسكري.");
+
+        return;
+    }
+
+
+    soldiers.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        rank: rank,
+
+        points: 0,
+
+        inside: false,
+
+        loginTime: null
+
+    });
+
+
+    document.getElementById("soldierName").value = "";
+
+
+    saveData();
+
+    render();
+
+
+    alert("✅ تمت إضافة العسكري.");
+}
+
+
+/* =========================
+   حذف عسكري
+========================= */
+
+function deleteSoldier(id) {
+
+    if (
+        !confirm(
+            "هل أنت متأكد من حذف هذا العسكري؟"
+        )
+    ) return;
+
+
+    soldiers =
+        soldiers.filter(
+            s => s.id !== id
+        );
+
+
+    saveData();
+
+    render();
+}
+
+
+/* =========================
+   الإدارة
+========================= */
+
+function openAdmin() {
+
+    document
+    .getElementById("adminModal")
+    .classList
+    .add("show");
+
+}
+
+
+function closeAdmin() {
+
+    document
+    .getElementById("adminModal")
+    .classList
+    .remove("show");
+
+}
+
+
+function loginAdmin() {
+
+    let password =
+        document
+        .getElementById("adminPassword")
+        .value;
+
+
+    /*
+       كلمة مرور الإدارة
+    */
+
+    if (password === "123654") {
+
+        document
+        .getElementById("adminLogin")
+        .style.display = "none";
+
+        document
+        .getElementById("adminPanel")
+        .style.display = "block";
+
+    } else {
+
+        alert(
+            "❌ كلمة المرور غير صحيحة."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   حماية عرض النص
+========================= */
+
+function escapeHTML(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   تحديث النقاط
+========================= */
+
+setInterval(() => {
+
+    render();
+
+}, 10000);
+
+
+/* تشغيل الموقع */
+
+render();
+
+</script>
 
 </body>
-</html>
+  </html>
