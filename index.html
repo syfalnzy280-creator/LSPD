@@ -31,7 +31,7 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 </style>
 </head>
 <body>
-<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">أول واحد يدخل يصير القيادة</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك العسكري"><button class="btn blue" onclick="window.authLogin()">🚪 دخول</button><div id="authMsg" style="color:#ffd45b;margin-top:10px;min-height:18px"></div></div></div></div>
+<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">اكتب اسمك وادخل مباشر</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك العسكري"><button class="btn blue" onclick="window.authLogin()">🚪 دخول</button><div id="authMsg" style="color:#ffd45b;margin-top:10px;min-height:18px"></div></div></div></div>
 <header class="top"><button class="menu" id="menuBtn">☰</button><div class="logo">LSPD <span>POLICE</span></div><button class="notify" id="notifyBtn">🔔<span class="badge" id="badge">0</span></button><button class="logout" id="logoutBtn">🚪</button></header>
 <div class="overlay" id="overlay"></div>
 <aside class="sidebar" id="sidebar"><div style="font-size:22px;font-weight:bold;margin-bottom:25px">🚔 LSPD</div>
@@ -54,9 +54,9 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 <div id="leaderPanel" style="display:none">
 <div class="panel"><div class="panel-title">🔓 التحكم بالرحلة</div><div class="panel-body"><button id="tripButton" class="btn green">🟢 فتح</button></div></div>
 <div class="panel"><div class="panel-title">➕ إضافة عسكري</div><div class="panel-body"><div class="form"><input id="newName" placeholder="اسم العسكري"><input id="newRank" placeholder="الرتبة"><input id="newUnit" placeholder="اليونت"><button class="btn blue" id="addSoldierBtn">➕ إضافة</button></div></div></div>
-<div class="panel"><div class="panel-title">👮‍♂️ إدارة العساكر - اختر من الجدول</div><div class="panel-body">
+<div class="panel"><div class="panel-title">👮‍♂️ إدارة العساكر</div><div class="panel-body">
 <div class="form">
-<select id="pointsSelect" style="font-size:16px;font-weight:bold"></select>
+<select id="pointsSelect"></select>
 <div id="selectedCard"></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <input type="number" id="pointsAmount" value="10" style="flex:1;min-width:90px">
@@ -66,8 +66,8 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 </div>
 <div id="pointsPreview" class="muted"></div>
 <div style="display:flex;gap:8px;margin-top:10px">
-<button class="btn red" id="deleteSelectedBtn" style="flex:1">🗑️ حذف العسكري</button>
-<button class="btn" style="flex:1;background:#444" id="resetSelectedBtn">🔄 تصفير نقاطه</button>
+<button class="btn red" id="deleteSelectedBtn" style="flex:1">🗑️ حذف</button>
+<button class="btn" style="flex:1;background:#444" id="resetSelectedBtn">🔄 تصفير</button>
 </div>
 </div>
 </div></div>
@@ -82,28 +82,30 @@ const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 let soldiers=[],requests=[],notifications=[],tripOpen=false,currentUser=localStorage.getItem("LSPD_CURRENT_USER")||"";
 const PASSWORD="123654";
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function findSoldier(n){return soldiers.find(s=>s.name.toLowerCase()===n.toLowerCase());}
+function findSoldier(n){return soldiers.find(s=>s.name && s.name.toLowerCase()===n.toLowerCase());}
 function findById(id){return soldiers.find(s=>s.id==id);}
 function getPoints(s){let p=s.points||0;if(s.inside&&s.loginTime){p+=Math.floor((Date.now()-s.loginTime)/60000/30);}return p;}
 function checkAuth(){if(!currentUser||!findSoldier(currentUser)){document.getElementById("authScreen").classList.remove("hide");}else{document.getElementById("authScreen").classList.add("hide");document.getElementById("mdtName").value=currentUser;document.getElementById("attendanceName").value=currentUser;renderWelcome();}}
 window.authLogin=async()=>{
 let n=document.getElementById("authName").value.trim();let msg=document.getElementById("authMsg");
-if(!n){msg.innerText="اكتب اسمك";return}msg.innerText="⏳ جاري...";
+if(!n){msg.innerText="اكتب اسمك";return}msg.innerText="⏳ جاري الدخول...";
+try{
 let s=findSoldier(n);
-if(soldiers.length===0){
+if(!s){
 let id=Date.now().toString();
-await setDoc(doc(db,"soldiers",id),{id:id,name:n,rank:"لواء",unit:"A-1",points:0,inside:false,loginTime:null,created:Date.now()});
+let rank = soldiers.length===0 ? "لواء" : "عسكري";
+await setDoc(doc(db,"soldiers",id),{id:id,name:n,rank:rank,unit:"A-1",points:0,inside:false,loginTime:null,created:Date.now()});
 currentUser=n;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();return;
 }
-if(!s){msg.innerText="❌ غير موجود - لازم القيادة تضيفك";return;}
-else{currentUser=s.name;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();}
+currentUser=s.name;localStorage.setItem("LSPD_CURRENT_USER",n);msg.innerText="";checkAuth();render();
+}catch(e){msg.innerText="خطأ: "+e.message;alert("Firebase خطأ: "+e.message);console.error(e);}
 };
 function logoutUser(){if(confirm("خروج؟")){currentUser="";localStorage.removeItem("LSPD_CURRENT_USER");checkAuth();}}
 function renderWelcome(){let s=findSoldier(currentUser);if(!s)return;document.getElementById("welcomeBox").innerHTML=`<div class="welcome">👋 مرحبا <b>${esc(s.name)}</b> | <span class="points">⭐ ${getPoints(s)}</span></div>`;document.getElementById("attendanceInfo").textContent=`نقاطك: ${getPoints(s)}`;}
 function openMenu(){document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").classList.add("show");}
 function closeMenu(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show");}
 function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));let b=document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add("active");closeMenu();render();}
-function renderSoldiers(){let q=document.getElementById("search").value.toLowerCase();let list=soldiers.filter(s=>s.name.toLowerCase().includes(q));let tb=document.getElementById("table");tb.innerHTML="";list.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.rank)}</td><td><span class="unit">${esc(s.unit)}</span></td><td><span class="points">⭐ ${getPoints(s)}</span></td><td><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span></td>`;tb.appendChild(tr);});document.getElementById("total").textContent=soldiers.length;document.getElementById("inside").textContent=soldiers.filter(s=>s.inside).length;document.getElementById("points").textContent=soldiers.reduce((a,s)=>a+getPoints(s),0);document.getElementById("trip").textContent=tripOpen?"مفتوحة":"مغلقة";}
+function renderSoldiers(){let q=document.getElementById("search").value.toLowerCase();let list=soldiers.filter(s=>s.name && s.name.toLowerCase().includes(q));let tb=document.getElementById("table");tb.innerHTML="";list.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.rank)}</td><td><span class="unit">${esc(s.unit)}</span></td><td><span class="points">⭐ ${getPoints(s)}</span></td><td><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span></td>`;tb.appendChild(tr);});document.getElementById("total").textContent=soldiers.length;document.getElementById("inside").textContent=soldiers.filter(s=>s.inside).length;document.getElementById("points").textContent=soldiers.reduce((a,s)=>a+getPoints(s),0);document.getElementById("trip").textContent=tripOpen?"مفتوحة":"مغلقة";}
 async function toggleTrip(){tripOpen=!tripOpen;await setDoc(doc(db,"settings","trip"),{open:tripOpen});if(!tripOpen){for(let s of soldiers.filter(x=>x.inside)){await updateDoc(doc(db,"soldiers",s.id),{points:getPoints(s),inside:false,loginTime:null});}}render();}
 async function login(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(s.inside){alert("مسجل.");return;}await updateDoc(doc(db,"soldiers",s.id),{inside:true,loginTime:Date.now()});}
 async function logout(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(!s.inside){alert("غير مسجل.");return;}await updateDoc(doc(db,"soldiers",s.id),{points:getPoints(s),inside:false,loginTime:null});}
@@ -111,13 +113,4 @@ function myPoints(){let s=findSoldier(currentUser);alert("⭐ "+s.name+": "+getP
 async function addSoldier(){let a=document.getElementById("newName").value.trim();let b=document.getElementById("newRank").value.trim()||"عسكري";let c=document.getElementById("newUnit").value.trim()||"A-1";if(!a){alert("❌ اكتب الاسم");return;}if(findSoldier(a)){alert("موجود.");return;}let id=Date.now().toString();await setDoc(doc(db,"soldiers",id),{id:id,name:a,rank:b,unit:c,points:0,inside:false,loginTime:null,created:Date.now()});document.getElementById("newName").value="";document.getElementById("newRank").value="";document.getElementById("newUnit").value="";}
 async function removeSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("حذف "+s.name+"؟"))return;await deleteDoc(doc(db,"soldiers",s.id));}
 function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌ غلط");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
-function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value||soldiers[0].id;sel.innerHTML=soldiers.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)} - ⭐ ${getPoints(s)}</option>`).join("");let s=findById(currentId)||soldiers[0];if(!s)return;document.getElementById("selectedCard").innerHTML=`<div class="request" style="background:#0f1a2a;border-color:#2a3d5a"><div style="display:flex;justify-content:space-between"><div><b style="font-size:18px">${esc(s.name)}</b><br><span class="muted">${esc(s.rank)} | ${esc(s.unit)}</span><br><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span> <span class="points" style="font-size:18px">⭐ ${getPoints(s)}</span></div><div style="font-size:35px">👮</div></div></div>`;document.getElementById("pointsPreview").textContent=`المحدد: ${s.name} | نقاطه: ${getPoints(s)}`;}
-async function handlePoints(act){let sel=document.getElementById("pointsSelect");let inp=document.getElementById("pointsAmount");let s=findById(sel.value);if(!s)return;let v=parseInt(inp.value)||0;let np=s.points||0;if(act=="add")np+=v;if(act=="remove")np=Math.max(0,np-v);if(act=="set")np=v;await updateDoc(doc(db,"soldiers",s.id),{points:np,loginTime:s.inside?Date.now():null});}
-async function resetSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("تصفير "+s.name+"؟"))return;await updateDoc(doc(db,"soldiers",s.id),{points:0,loginTime:s.inside?Date.now():null});}
-async function sendMDT(){let title=document.getElementById("mdtTitle").value.trim();let text=document.getElementById("mdtText").value.trim();let file=document.getElementById("mdtFile").files[0];if(!title||!text){alert("❌ أكمل");return;}async function create(img){await addDoc(collection(db,"requests"),{name:currentUser,title:title,text:text,image:img||"",status:"pending",time:Date.now()});await addDoc(collection(db,"notifications"),{type:"leader",title:"📨 طلب جديد",message:currentUser+" أرسل حالة.",time:Date.now()});alert("✅ تم");document.getElementById("mdtTitle").value="";document.getElementById("mdtText").value="";document.getElementById("mdtFile").value="";}if(file){let r=new FileReader();r.onload=e=>create(e.target.result);r.readAsDataURL(file);}else create("");}
-async function acceptRequest(id){let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await updateDoc(doc(db,"requests",id),{status:"accepted"});let s=findSoldier(r.name);if(s)await updateDoc(doc(db,"soldiers",s.id),{points:(s.points||0)+10});await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"✅ قبول",message:"+10 نقاط!",time:Date.now()});}
-async function rejectRequest(id){await updateDoc(doc(db,"requests",id),{status:"rejected"});let snap=await getDoc(doc(db,"requests",id));let r=snap.data();await addDoc(collection(db,"notifications"),{type:"soldier",target:r.name,title:"❌ رفض",message:"تم الرفض.",time:Date.now()});}
-window.acceptRequest=acceptRequest;window.rejectRequest=rejectRequest;
-function renderRequests(){let box=document.getElementById("requests");let list=requests.filter(r=>r.status=="pending");if(!list.length){box.innerHTML='<div class="empty">لا توجد طلبات.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>📨 ${esc(r.title)}</b><p>${esc(r.name)}</p><p class="muted">${esc(r.text)}</p>${r.image?`<img src="${r.image}" style="max-width:200px;border-radius:8px;margin-top:8px">`:""}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="acceptRequest('${r.id}')">✅ قبول +10</button><button class="btn red" onclick="rejectRequest('${r.id}')">❌ رفض</button></div></div>`).join("");}
-function renderMyRequests(){let box=document.getElementById("myRequests");let list=requests.filter(r=>r.name.toLowerCase()==currentUser.toLowerCase());if(!list.length){box.innerHTML='<div class="empty">لا يوجد.</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>${esc(r.title)}</b><p class="muted">${esc(r.text)}</p>${r.status=="accepted"?'<span class="status online">✅ مقبول</span>':r.status=="rejected"?'<span class="status offline">❌ مرفوض</span>':'⏳ قيد المراجعة'}</div>`).join("");}
-function openNotifications(){let box=document.getElementById("notifications");let my=notifications.filter(n=>n.target&&n.target.toLowerCase()==currentUser.toLowerCase());box.innerHTML=m
+function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value||soldiers[0].id;sel.innerHTML=soldiers.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)} - ⭐ ${getPoints(s)}</option>`).join("");let s=findById
