@@ -31,11 +31,11 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 </style>
 </head>
 <body>
-<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">سجل بياناتك للدخول للجدول</p><div class="form" style="margin-top:20px;text-align:right">
+<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل دخول</h2><p class="muted">سجل بياناتك</p><div class="form" style="margin-top:20px;text-align:right">
 <label class="muted">1️⃣ الاسم</label><input id="authName" placeholder="اسمك الكامل">
 <label class="muted">2️⃣ اليونيت</label><input id="authUnit" placeholder="مثال: A-101">
 <label class="muted">3️⃣ الرتبة</label>
-<select id="authRank" style="font-size:16px">
+<select id="authRank">
 <option value="">اختر الرتبة</option>
 <option value="جندي">جندي</option>
 <option value="جندي أول">جندي أول</option>
@@ -55,41 +55,37 @@ input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;bor
 <option value="فريق">فريق</option>
 <option value="فريق أول">فريق أول</option>
 </select>
-<button class="btn blue" id="authLoginBtn" style="margin-top:10px">🚪 تسجيل ودخول للجدول</button>
+<button class="btn blue" id="authLoginBtn" style="margin-top:10px">🚪 تسجيل ودخول</button>
 </div></div></div>
-
 <header class="top"><button class="menu" id="menuBtn">☰</button><div class="logo">LSPD <span>POLICE</span></div><button class="notify" id="notifyBtn">🔔<span class="badge" id="badge">0</span></button><button class="logout" id="logoutBtn">🚪</button></header>
 <div class="overlay" id="overlay"></div>
 <aside class="sidebar" id="sidebar"><div style="font-size:22px;font-weight:bold;margin-bottom:25px">🚔 LSPD</div>
 <button class="nav active" data-page="soldiers">👮 جدول العساكر</button><button class="nav" data-page="mdt">📡 MDT</button><button class="nav" data-page="attendance">🕐 الدخول والخروج</button><button class="nav" data-page="protocols">📜 بروتوكولات الشرطة</button><button class="nav" data-page="leaders">👑 القيادات</button>
 </aside>
 <main class="container">
-<section id="soldiers" class="page active"><div class="hero"><h1>👮 جدول العساكر</h1><div id="welcomeBox"></div><p class="muted">مرتب من الأعلى رتبة الى الأقل</p></div><div class="stats"><div class="card"><small>إجمالي</small><div class="big" id="total">0</div></div><div class="card"><small>داخل</small><div class="big" id="inside">0</div></div><div class="card"><small>النقاط</small><div class="big" id="points">0</div></div><div class="card"><small>الرحلة</small><div class="big" id="trip">مغلقة</div></div></div><div class="panel"><div style="display:flex;justify-content:space-between;padding:15px"><b>قائمة العساكر (من فريق أول الى جندي)</b><input id="search" placeholder="🔎 بحث" style="max-width:200px"></div><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>العسكري</th><th>الرتبة</th><th>اليونت</th><th>النقاط</th><th>الحالة</th></tr></thead><tbody id="table"></tbody></table></div></div></section>
+<section id="soldiers" class="page active"><div class="hero"><h1>👮 جدول العساكر</h1><div id="welcomeBox"></div><p class="muted">مرتب من فريق أول الى جندي</p></div><div class="stats"><div class="card"><small>إجمالي</small><div class="big" id="total">0</div></div><div class="card"><small>داخل</small><div class="big" id="inside">0</div></div><div class="card"><small>النقاط</small><div class="big" id="points">0</div></div><div class="card"><small>الرحلة</small><div class="big" id="trip">مغلقة</div></div></div><div class="panel"><div style="display:flex;justify-content:space-between;padding:15px"><b>قائمة العساكر</b><input id="search" placeholder="🔎 بحث" style="max-width:200px"></div><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>العسكري</th><th>الرتبة</th><th>اليونت</th><th>النقاط</th><th>الحالة</th></tr></thead><tbody id="table"></tbody></table></div></div></section>
 <section id="mdt" class="page"><div class="hero"><h1>📡 MDT</h1></div><div class="panel"><div class="panel-title">📤 إرسال حالة</div><div class="panel-body"><div class="form"><input id="mdtName" disabled><input id="mdtTitle" placeholder="عنوان الحالة"><textarea id="mdtText" placeholder="تفاصيل..."></textarea><input type="file" id="mdtFile" accept="image/*"><button class="btn blue" id="sendMdtBtn">📡 إرسال</button></div></div></div><div class="panel"><div class="panel-title">📨 طلباتي</div><div class="panel-body" id="myRequests"></div></div></section>
 <section id="attendance" class="page"><div class="hero"><h1>🕐 الدخول والخروج</h1></div><div class="panel"><div class="panel-body"><div>الرحلة: <strong id="attendanceTrip">🔴 مغلقة</strong></div><div class="form" style="margin-top:15px"><input id="attendanceName" disabled><button id="loginButton" class="btn green">🟢 دخول</button><button id="logoutButton" class="btn red">🔴 خروج</button><button id="myPointsBtn" class="btn yellow">⭐ نقاطي</button></div><div id="attendanceInfo" style="margin-top:15px" class="muted"></div></div></div></section>
-<section id="protocols" class="page"><div class="hero"><h1>📜 Police Protocols</h1><p class="muted">أكواد الراديو والبلاغات المعتمدة.</p></div><div class="panel"><div class="panel-title">📡 أكواد الراديو</div><div class="panel-body" style="padding:0"><table><thead><tr><th>الكود</th><th>المعنى</th></tr></thead><tbody><tr><td>10-4</td><td>علم صحيح</td></tr><tr><td>0-8</td><td>تسجيل دخول</td></tr><tr><td>0-7</td><td>تسجيل خروج</td></tr></tbody></table></div></div></section>
+<section id="protocols" class="page"><div class="hero"><h1>📜 Police Protocols</h1></div><div class="panel"><div class="panel-title">📡 أكواد الراديو</div><div class="panel-body" style="padding:0"><table><thead><tr><th>الكود</th><th>المعنى</th></tr></thead><tbody><tr><td>10-4</td><td>علم</td></tr><tr><td>0-8</td><td>دخول</td></tr><tr><td>0-7</td><td>خروج</td></tr></tbody></table></div></div></section>
 <section id="leaders" class="page"><div class="hero"><h1>👑 القيادات</h1></div>
 <div id="leaderLogin"><div class="panel"><div class="panel-body"><div class="form"><input type="password" id="password" placeholder="🔐 كلمة المرور"><button class="btn blue" id="leaderLoginBtn">دخول</button></div></div></div></div>
 <div id="leaderPanel" style="display:none">
 <div class="panel"><div class="panel-title">🔓 التحكم بالرحلة</div><div class="panel-body"><button id="tripButton" class="btn green">🟢 فتح</button></div></div>
-<div class="panel"><div class="panel-title">➕ إضافة عسكري</div><div class="panel-body"><div class="form"><input id="newName" placeholder="اسم العسكري"><input id="newRank" placeholder="الرتبة"><input id="newUnit" placeholder="اليونت"><button class="btn blue" id="addSoldierBtn">➕ إضافة</button></div></div></div>
 <div class="panel"><div class="panel-title">👮‍♂️ إدارة العساكر</div><div class="panel-body"><div class="form">
 <select id="pointsSelect" style="font-size:16px;font-weight:bold"></select>
 <div id="selectedCard"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-<select id="editRank">
-<option value="جندي">جندي</option><option value="جندي أول">جندي أول</option><option value="عريف">عريف</option><option value="وكيل رقيب">وكيل رقيب</option><option value="رقيب">رقيب</option><option value="رقيب أول">رقيب أول</option><option value="رئيس رقباء">رئيس رقباء</option><option value="ملازم">ملازم</option><option value="ملازم أول">ملازم أول</option><option value="نقيب">نقيب</option><option value="رائد">رائد</option><option value="مقدم">مقدم</option><option value="عقيد">عقيد</option><option value="عميد">عميد</option><option value="لواء">لواء</option><option value="فريق">فريق</option><option value="فريق أول">فريق أول</option>
-</select>
-<input id="editUnit" placeholder="اليونيت الجديد">
+<select id="editRank"><option value="جندي">جندي</option><option value="جندي أول">جندي أول</option><option value="عريف">عريف</option><option value="وكيل رقيب">وكيل رقيب</option><option value="رقيب">رقيب</option><option value="رقيب أول">رقيب أول</option><option value="رئيس رقباء">رئيس رقباء</option><option value="ملازم">ملازم</option><option value="ملازم أول">ملازم أول</option><option value="نقيب">نقيب</option><option value="رائد">رائد</option><option value="مقدم">مقدم</option><option value="عقيد">عقيد</option><option value="عميد">عميد</option><option value="لواء">لواء</option><option value="فريق">فريق</option><option value="فريق أول">فريق أول</option></select>
+<input id="editUnit" placeholder="اليونيت">
 </div>
-<button class="btn blue" id="saveEditBtn" style="width:100%;margin-top:8px">💾 حفظ تعديل الرتبة واليونيت</button>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><input type="number" id="pointsAmount" value="10" style="flex:1;min-width:90px"><button class="btn green" id="pointsAddBtn" style="flex:1">➕ إضافة نقاط</button><button class="btn red" id="pointsRemoveBtn" style="flex:1">➖ خصم نقاط</button><button class="btn blue" id="pointsSetBtn" style="flex:1">✏️ تثبيت نقاط</button></div>
+<button class="btn blue" id="saveEditBtn" style="width:100%;margin-top:8px">💾 حفظ الرتبة واليونيت</button>
+<div style="display:flex;gap:8px;margin-top:12px"><input type="number" id="pointsAmount" value="10" style="flex:1"><button class="btn green" id="pointsAddBtn">➕</button><button class="btn red" id="pointsRemoveBtn">➖</button></div>
 <div id="pointsPreview" class="muted"></div>
 <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="deleteSelectedBtn" style="flex:1">🗑️ حذف</button><button class="btn" style="flex:1;background:#444" id="resetSelectedBtn">🔄 تصفير</button></div>
 </div></div></div>
 <div class="panel"><div class="panel-title">📨 طلبات MDT</div><div class="panel-body" id="requests"></div></div></div></section>
 </main>
-<div class="modal" id="notificationModal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><h3>🔔 إشعاراتك</h3><button style="background:#303846;border:0;color:#fff;width:35px;height:35px;border-radius:9px" id="closeNotifBtn">×</button></div><div id="notifications"></div></div></div>
+<div class="modal" id="notificationModal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><h3>🔔 إشعارات</h3><button style="background:#303846;border:0;color:#fff;width:35px;height:35px;border-radius:9px" id="closeNotifBtn">×</button></div><div id="notifications"></div></div></div>
 <script>
 let soldiers=JSON.parse(localStorage.getItem("LSPD_SOLDIERS")||"[]");
 let requests=JSON.parse(localStorage.getItem("LSPD_REQUESTS")||"[]");
@@ -109,41 +105,42 @@ function authLogin(){
  let n=document.getElementById("authName").value.trim();
  let u=document.getElementById("authUnit").value.trim();
  let r=document.getElementById("authRank").value;
- if(!n||!u||!r){alert("❌ عبي كل البيانات: الاسم واليونيت والرتبة");return;}
+ if(!n){alert("❌ اكتب اسمك");return;}
+ if(!u){alert("❌ اكتب اليونيت");return;}
+ if(!r){alert("❌ اختر الرتبة");return;}
  let s=findSoldier(n);
- if(s){
-   currentUser=s.name;save();checkAuth();render();
- } else {
+ if(!s){
    soldiers.push({id:Date.now(),name:n,rank:r,unit:u,points:0,inside:false,loginTime:null});
-   currentUser=n;save();checkAuth();render();
-   alert("✅ تم تسجيلك كـ "+r+" | يونيت "+u);
+   s=findSoldier(n);
+ } else {
+   s.unit=u; s.rank=r;
  }
+ currentUser=s.name;
+ save();
+ document.getElementById("authScreen").classList.add("hide");
+ document.getElementById("mdtName").value=currentUser;
+ document.getElementById("attendanceName").value=currentUser;
+ render();
+ renderWelcome();
 }
-function logoutUser(){if(confirm("خروج؟")){currentUser="";localStorage.removeItem("LSPD_CURRENT_USER");checkAuth();}}
+function logoutUser(){if(confirm("تسجيل خروج؟")){currentUser="";localStorage.removeItem("LSPD_CURRENT_USER");document.getElementById("authScreen").classList.remove("hide");}}
 function renderWelcome(){let s=findSoldier(currentUser);if(!s)return;document.getElementById("welcomeBox").innerHTML=`<div class="welcome">👋 مرحبا <b>${esc(s.name)}</b> | ${esc(s.rank)} | <span class="points">⭐ ${getPoints(s)}</span></div>`;document.getElementById("attendanceInfo").textContent=`نقاطك: ${getPoints(s)}`;}
 function openMenu(){document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").classList.add("show");}
 function closeMenu(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show");}
 function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));let b=document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add("active");closeMenu();render();}
-function renderSoldiers(){
- let q=document.getElementById("search").value.toLowerCase();
- let list=soldiers.filter(s=>s.name.toLowerCase().includes(q));
- list.sort((a,b)=>rankValue(b.rank)-rankValue(a.rank));
- let tb=document.getElementById("table");tb.innerHTML="";
- list.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.rank)}</td><td><span class="unit">${esc(s.unit)}</span></td><td><span class="points">⭐ ${getPoints(s)}</span></td><td><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span></td>`;tb.appendChild(tr);});
- document.getElementById("total").textContent=soldiers.length;
- document.getElementById("inside").textContent=soldiers.filter(s=>s.inside).length;
- document.getElementById("points").textContent=soldiers.reduce((a,s)=>a+getPoints(s),0);
- document.getElementById("trip").textContent=tripOpen?"مفتوحة":"مغلقة";
-}
+function renderSoldiers(){let q=document.getElementById("search").value.toLowerCase();let list=soldiers.filter(s=>s.name.toLowerCase().includes(q));list.sort((a,b)=>rankValue(b.rank)-rankValue(a.rank));let tb=document.getElementById("table");tb.innerHTML="";list.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.rank)}</td><td><span class="unit">${esc(s.unit)}</span></td><td><span class="points">⭐ ${getPoints(s)}</span></td><td><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢":"🔴"}</span></td>`;tb.appendChild(tr);});document.getElementById("total").textContent=soldiers.length;document.getElementById("inside").textContent=soldiers.filter(s=>s.inside).length;document.getElementById("points").textContent=soldiers.reduce((a,s)=>a+getPoints(s),0);document.getElementById("trip").textContent=tripOpen?"مفتوحة":"مغلقة";}
 function toggleTrip(){if(tripOpen){soldiers.forEach(s=>{if(s.inside){s.points=getPoints(s);s.inside=false;s.loginTime=null;}});tripOpen=false;}else tripOpen=true;save();render();}
-function login(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(s.inside){alert("مسجل.");return;}s.inside=true;s.loginTime=Date.now();save();render();renderWelcome();}
-function logout(){if(!tripOpen){alert("🔴 مغلقة!");return;}let s=findSoldier(currentUser);if(!s.inside){alert("غير مسجل.");return;}s.points=getPoints(s);s.inside=false;s.loginTime=null;save();render();renderWelcome();}
+function login(){if(!tripOpen){alert("🔴 مغلقة");return;}let s=findSoldier(currentUser);if(s.inside){alert("مسجل");return;}s.inside=true;s.loginTime=Date.now();save();render();renderWelcome();}
+function logout(){if(!tripOpen){alert("🔴 مغلقة");return;}let s=findSoldier(currentUser);if(!s.inside){alert("غير مسجل");return;}s.points=getPoints(s);s.inside=false;s.loginTime=null;save();render();renderWelcome();}
 function myPoints(){let s=findSoldier(currentUser);alert("⭐ "+s.name+": "+getPoints(s));}
-function addSoldier(){let a=document.getElementById("newName").value.trim();let b=document.getElementById("newRank").value.trim();let c=document.getElementById("newUnit").value.trim();if(!a||!b||!c){alert("❌ أكمل.");return;}if(findSoldier(a)){alert("موجود.");return;}soldiers.push({id:Date.now(),name:a,rank:b,unit:c,points:0,inside:false,loginTime:null});document.getElementById("newName").value="";document.getElementById("newRank").value="";document.getElementById("newUnit").value="";save();render();}
 function removeSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("حذف "+s.name+"؟"))return;soldiers=soldiers.filter(x=>x.id!=s.id);save();render();}
-function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
-function saveEdit(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;let newRank=document.getElementById("editRank").value;let newUnit=document.getElementById("editUnit").value.trim();if(newRank) s.rank=newRank;if(newUnit) s.unit=newUnit;save();render();alert("✅ تم تعديل "+s.name+" الى "+s.rank+" | "+s.unit);}
-function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد عساكر</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value || soldiers[0].id;let sorted=[...soldiers].sort((a,b)=>rankValue(b.rank)-rankValue(a.rank));sel.innerHTML=sorted.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)} - ⭐ ${getPoints(s)}</option>`).join("");let s=findById(currentId) || sorted[0];if(!s)return;document.getElementById("selectedCard").innerHTML=`<div class="request" style="background:#0f1a2a;border-color:#2a3d5a"><div style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:18px">${esc(s.name)}</b><br><span class="muted">${esc(s.rank)} | ${esc(s.unit)}</span><br><span class="status ${s.inside?"online":"offline"}">${s.inside?"🟢 داخل":"🔴 خارج"}</span> <span class="points" style="font-size:18px">⭐ ${getPoints(s)}</span></div><div style="font-size:35px">👮</div></div></div>`;document.getElementById("pointsPreview").textContent=`المحدد: ${s.name} | نقاطه: ${getPoints(s)}`;if(document.activeElement.id!=="editRank" && document.activeElement.id!=="editUnit"){document.getElementById("editRank").value=s.rank;document.getElementById("editUnit").value=s.unit;}}
-function handlePoints(act){let sel=document.getElementById("pointsSelect");let inp=document.getElementById("pointsAmount");let s=findById(sel.value);if(!s)return;let v=parseInt(inp.value)||0;if(act=="add")s.points=Math.max(0,(s.points||0)+v);if(act=="remove")s.points=Math.max(0,(s.points||0)-v);if(act=="set"){s.points=v;s.loginTime=s.inside?Date.now():null;}save();render();}
-function resetSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;if(!confirm("تصفير نقاط "+s.name+"؟"))return;s.points=0;s.loginTime=s.inside?Date.now():null;save();render();}
-function sendMDT(){let title=document.getElementById("mdtTitle").value.trim();let text=document.getElementById("mdtText").value.trim();let file=document.getElementById
+function leaderLogin(){let p=document.getElementById("password").value;if(p!==PASSWORD){alert("❌ خطأ");return;}document.getElementById("leaderLogin").style.display="none";document.getElementById("leaderPanel").style.display="block";render();}
+function saveEdit(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;let newRank=document.getElementById("editRank").value;let newUnit=document.getElementById("editUnit").value.trim();if(newRank) s.rank=newRank;if(newUnit) s.unit=newUnit;save();render();alert("✅ تم");}
+function renderManage(){let sel=document.getElementById("pointsSelect");if(!sel)return;if(soldiers.length===0){sel.innerHTML="<option>لا يوجد</option>";document.getElementById("selectedCard").innerHTML="";return;}let currentId=sel.value || soldiers[0].id;let sorted=[...soldiers].sort((a,b)=>rankValue(b.rank)-rankValue(a.rank));sel.innerHTML=sorted.map(s=>`<option value="${s.id}" ${s.id==currentId?"selected":""}>${esc(s.name)} - ${esc(s.rank)}</option>`).join("");let s=findById(currentId) || sorted[0];if(!s)return;document.getElementById("selectedCard").innerHTML=`<div class="request" style="background:#0f1a2a"><b>${esc(s.name)}</b><br>${esc(s.rank)} | ${esc(s.unit)} <span class="points">⭐ ${getPoints(s)}</span></div>`;document.getElementById("pointsPreview").textContent=s.name+" نقاطه "+getPoints(s);if(document.activeElement.id!="editUnit"){document.getElementById("editRank").value=s.rank;document.getElementById("editUnit").value=s.unit;}}
+function handlePoints(act){let sel=document.getElementById("pointsSelect");let inp=document.getElementById("pointsAmount");let s=findById(sel.value);if(!s)return;let v=parseInt(inp.value)||0;if(act=="add")s.points=(s.points||0)+v;if(act=="remove")s.points=Math.max(0,(s.points||0)-v);save();render();}
+function resetSelected(){let sel=document.getElementById("pointsSelect");let s=findById(sel.value);if(!s)return;s.points=0;s.loginTime=s.inside?Date.now():null;save();render();}
+function sendMDT(){let title=document.getElementById("mdtTitle").value.trim();let text=document.getElementById("mdtText").value.trim();if(!title||!text){alert("❌ أكمل");return;}requests.push({id:Date.now(),name:currentUser,title:title,text:text,status:"pending"});notifications.push({id:Date.now()+1,type:"leader",title:"📨 طلب",message:currentUser});save();render();alert("✅ تم");document.getElementById("mdtTitle").value="";document.getElementById("mdtText").value="";}
+function acceptRequest(id){let r=requests.find(x=>x.id==id);r.status="accepted";let s=findSoldier(r.name);if(s)s.points+=10;notifications.push({id:Date.now(),type:"soldier",target:r.name,title:"✅ قبول",message:"+10"});save();render();}
+function rejectRequest(id){let r=requests.find(x=>x.id==id);r.status="rejected";notifications.push({id:Date.now(),type:"soldier",target:r.name,title:"❌ رفض",message:"مرفوض"});save();render();}
+function renderRequests(){let box=document.getElementById("requests");let list=requests.filter(r=>r.status=="pending");if(!list.length){box.innerHTML='<div class="empty">لا يوجد</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>${esc(r.title)}</b><p>${esc(r.name)}</p><p>${esc(r.text)}</p><button class="btn green" onclick="acceptRequest(${r.id})">✅</button><button class="btn red" onclick="rejectRequest(${r.id})">❌</button></div>`).join("");}
+function renderMyRequests(){let box=document.getElementById("myRequests");let list=requests.filter(r=>r.name.toLowerCase()==currentUser.toLowerCase());if(!list.length){box.innerHTML='<div class="empty">لا يوجد</div>';return;}box.innerHTML=list.map(r=>`<div class="request"><b>${esc(r.title)}</
