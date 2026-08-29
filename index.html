@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LSPD | Police</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>/* نفس ستايلك القديم */*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#080b10;color:#fff}.top{height:70px;background:#10151d;display:flex;align-items:center;padding:0 15px;position:sticky;top:0;z-index:20}.menu{width:44px;height:44px;border:0;border-radius:12px;background:#202733;color:#fff;font-size:23px;cursor:pointer}.logo{font-size:22px;font-weight:bold;margin-right:12px}.logo span{color:#4d8dff}.logout{width:44px;height:44px;border:0;border-radius:12px;background:#40191d;color:#ff7777;font-size:18px;cursor:pointer;margin-right:auto}.sidebar{position:fixed;top:0;right:-300px;height:100vh;width:285px;background:#10141b;z-index:50;padding:20px;transition:.25s}.sidebar.open{right:0}.nav{display:block;width:100%;border:0;background:transparent;color:#cbd5e1;padding:14px;border-radius:11px;text-align:right;margin-bottom:7px;cursor:pointer}.nav.active{background:#1c2a3e;color:#fff}.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40}.overlay.show{display:block}.container{max-width:1150px;margin:auto;padding:22px 15px}.page{display:none}.page.active{display:block}.hero{background:#121d2c;border:1px solid #293441;border-radius:18px;padding:25px;margin-bottom:17px}.muted{color:#8d98a8}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:17px}.card{background:#11161e;border:1px solid #29313c;border-radius:15px;padding:17px}.big{font-size:27px;font-weight:bold;margin-top:8px}.panel{background:#11161e;border:1px solid #29313c;border-radius:16px;margin-bottom:17px;overflow:hidden}.panel-title{padding:16px;border-bottom:1px solid #29313c;font-weight:bold}.panel-body{padding:17px}table{width:100%;border-collapse:collapse}th,td{padding:13px;border-bottom:1px solid #252d37;text-align:right}th{font-size:12px;color:#8d98a8}input,textarea,select{width:100%;background:#0b0f15;border:1px solid #303a47;border-radius:10px;padding:12px;color:#fff}textarea{min-height:120px}.form{display:grid;gap:11px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:bold;color:#fff;cursor:pointer}.blue{background:#2777ff}.green{background:#16a34a}.red{background:#dc2626}.yellow{background:#eab308;color:#111}.auth{position:fixed;inset:0;background:#080b10;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}.auth.hide{display:none}.auth-box{width:min(400px,100%);background:#11161e;border:1px solid #29313c;border-radius:20px;padding:30px;text-align:center}</style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>LSPD</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:Cairo;background:#080b10;color:#fff} .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:99;padding:16px} .card{background:#11161e;border:1px solid #1e2a3a;border-radius:18px;padding:20px} input{width:100%;padding:12px;margin:8px 0;border-radius:12px;border:1px solid #1e2a3a;background:#0e1520;color:#fff} .btn{width:100%;padding:12px;border:0;border-radius:12px;background:#2777ff;color:#fff;font-weight:800;cursor:pointer}</style>
 </head>
 <body>
-<div class="auth" id="authScreen"><div class="auth-box"><div style="font-size:50px">🚔</div><h2>LSPD تسجيل</h2><p class="muted">سجل حساب جديد أو ادخل</p><div class="form" style="margin-top:20px"><input id="authName" placeholder="اسمك"><input id="authPass" type="password" placeholder="كلمة سر (للتسجيل الجديد)"><button class="btn blue" id="authLoginBtn">🚪 دخول / تسجيل</button><p class="muted" style="font-size:12px">لو الاسم غير موجود بيتسجل تلقائياً</p></div></div></div>
-
-<header class="top"><button class="menu" id="menuBtn">☰</button><div class="logo">LSPD <span>POLICE</span></div><button class="logout" id="logoutBtn">🚪</button></header>
-<div class="overlay" id="overlay"></div>
-<aside class="sidebar" id="sidebar"><div style="font-size:22px;font-weight:bold;margin-bottom:25px">🚔 LSPD</div>
-<button class="nav active" data-page="soldiers">👮 العساكر</button><button class="nav" data-page="mdt">📡 MDT</button><button class="nav" data-page="attendance">🕐 الدخول</button><button class="nav" data-page="leaders">👑 القيادات</button></aside>
-
-<main class="container">
-<section id="soldiers" class="page active"><div class="hero"><h1>👮 جدول العساكر</h1><div id="welcomeBox"></div></div>
-<div class="stats"><div class="card"><small>إجمالي</small><div class="big" id="total">0</div></div><div class="card"><small>داخل</small><div class="big" id="inside">0</div></div><div class="card"><small>النقاط</small><div class="big" id="points">0</div></div><div class="card"><small>الرحلة</small><div class="big" id="trip">...</div></div></div>
-<div class="panel"><div style="overflow-x:auto"><table><thead><tr><th>العسكري</th><th>الرتبة</th><th>النقاط</th><th>الحالة</th></tr></thead><tbody id="table"></tbody></table></div></div></section>
-<section id="leaders" class="page"><div class="hero"><h1>👑 القيادات</h1></div><div class="panel"><div class="panel-body"><input type="password" id="password" placeholder="كلمة المرور 123654"><button class="btn blue" id="leaderLoginBtn">دخول</button></div></div>
-<div id="leaderPanel" style="display:none"><div class="panel"><div class="panel-body"><button id="tripButton" class="btn green">فتح/قفل الرحلة</button></div></div>
-<div class="panel"><div class="panel-body"><div class="form"><input id="newName" placeholder="اسم العسكري"><input id="newRank" placeholder="الرتبة"><button class="btn blue" id="addSoldierBtn">➕ إضافة</button></div></div></div></div></section>
-<section id="attendance" class="page"><div class="hero"><h1>🕐 الدخول والخروج</h1></div
+<div id="auth" class="overlay"><div class="card" style="width:360px;text-align:center"><h2>🚔 LSPD</h2><p style="color:#7c8da6">اذا اسمك جديد بيتسجل تلقائي</p><input id="authName" placeholder="اسمك العسكري"><input id="authPass" type="password" placeholder="كلمة السر"><button class="btn" onclick="authLogin()">🚪 دخول / تسجيل جديد</button><div id="authMsg" style="color:#ffc431;margin-top:10px"></div></div></div>
+<div style="padding:40px;text-align:center"><h1>✅ تم الدخول - <span id="who"></span></h1><p>موقعك شغال والفايربيس مربوط</p><button onclick="localStorage.clear();location.reload()" style="padding:10px 20px">تسجيل خروج</button><div style="margin-top:20px"><a href="https://syfalnzy280-creator.github.io/LSPD/" style="color:#2777ff">تحديث الصفحة</a></div></div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import {getFirestore,doc,getDoc,setDoc} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyDPW113hl8oe6RfF6rpq_-vUQ_0AK34sSs",authDomain:"lspd-2026-1.firebaseapp.com",projectId:"lspd-2026-1"});
+const db=getFirestore(app);
+let user=localStorage.getItem("lspd_user");
+if(user){document.getElementById("auth").style.display="none";document.getElementById("who").innerText=user;}
+window.authLogin=async()=>{
+let name=document.getElementById("authName").value.trim();
+let pass=document.getElementById("authPass").value.trim();
+let msg=document.getElementById("authMsg");
+if(!name||!pass){msg.innerText="عبي البيانات";return}
+msg.innerText="⏳ جاري...";
+try{
+let ref=doc(db,"soldiers",name.toLowerCase());
+let snap=await getDoc(ref);
+if(!snap.exists()){
+await setDoc(ref,{name:name,password:pass,points:0,rank:"عسكري",status:"نشط",created:Date.now()});
+localStorage.setItem("lspd_user",name);
+msg.innerText="✅ تم تسجيلك!";
+setTimeout(()=>location.reload(),800);
+}else{
+if(snap.data().password==pass){localStorage.setItem("lspd_user",name);location.reload()}
+else{msg.innerText="❌ كلمة السر غلط"}
+}
+}catch(e){msg.innerText="خطأ: "+e.message}
+}
+</script>
+</body>
+</html>
