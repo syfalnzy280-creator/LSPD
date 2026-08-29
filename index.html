@@ -2,94 +2,138 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LSPD</title>
+<title>LSPD - نظام إدارة الشرطة</title>
 <style>
-body{margin:0;background:#0a0e14;color:#fff;font-family:Arial}
-.box{max-width:380px;margin:80px auto;background:#151a23;border:1px solid #2a3441;border-radius:18px;padding:28px;text-align:center}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#000;color:#fff;margin:10px 0;box-sizing:border-box}
-.btn{width:100%;padding:14px;border:0;border-radius:10px;background:#2a7fff;color:#fff;font-weight:bold;cursor:pointer;margin-top:10px}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{padding:10px;border-bottom:1px solid #222;text-align:right}
-.top{background:#11161e;padding:12px;display:flex;gap:10px;align-items:center}
-#err{color:#ff6666;background:#2a1515;padding:10px;border-radius:8px;margin-top:10px;display:none;direction:ltr;font-size:12px;white-space:pre-wrap;text-align:left}
+:root{--bg:#0a0e14;--card:#151a23;--b:#2a3441;--blue:#2a7fff;--gold:#f0c040;--red:#ff4d4d;--green:#2ecc71}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:system-ui}
+.top{position:sticky;top:0;z-index:5;background:#11161e;border-bottom:1px solid var(--b);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.badge{padding:4px 10px;border-radius:20px;background:#1e2a3a;border:1px solid var(--b);font-size:12px}
+.wrap{max-width:1100px;margin:0 auto;padding:18px;display:grid;grid-template-columns:280px 1fr;gap:18px}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px}
+.btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:bold}
+.btn-blue{background:var(--blue);color:#fff;width:100%}.btn-ghost{background:#1c2531;border:1px solid var(--b);color:#ccc}
+.btn-red{background:var(--red);color:#fff}.btn-green{background:var(--green);color:#000}
+input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--b);background:#0d121a;color:#fff;margin:6px 0}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #1f2937;text-align:right;font-size:14px}
+.rank{padding:3px 8px;border-radius:8px;background:#1e293b;font-size:11px}
+.log{max-height:300px;overflow:auto;font-size:12px;color:#9ca3af}.log div{padding:6px 0;border-bottom:1px dashed #222}
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:99}
+.loginBox{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:26px;width:92%;max-width:400px;text-align:center}
 </style>
 </head>
 <body>
-<div id="loginDiv" class="box">
-<div style="font-size:48px">🚔</div>
-<h2>LSPD</h2>
-<input id="nameI" placeholder="اكتب اسمك">
-<button class="btn" id="goBtn">🚪 دخول</button>
-<div id="err"></div>
-<div id="stat" style="color:#f0c040;margin-top:10px;font-size:13px"></div>
+
+<div id="login">
+<div class="loginBox">
+<div style="font-size:50px">🚔</div>
+<h2>LSPD</h2><p style="color:#888">اكتب اسمك للدخول</p>
+<input id="nameI" placeholder="اسمك">
+<button class="btn btn-blue" id="enterBtn">🚪 دخول</button>
+<div id="err" style="color:#ff7777;margin-top:10px;font-size:12px;white-space:pre-wrap"></div>
+</div>
 </div>
 
-<div id="mainDiv" style="display:none">
-<div class="top"><span id="who"></span><button onclick="localStorage.clear();location.reload()" style="margin-right:auto;background:#40191d;border:0;color:#fff;padding:8px 12px;border-radius:8px">خروج</button></div>
-<div style="padding:18px">
-<h3>👮 العساكر - <span id="cnt">0</span></h3>
-<table><thead><tr><th>#</th><th>الاسم</th><th>الرتبة</th></tr></thead><tbody id="tb"></tbody></table>
-<p style="color:#888;font-size:12px;margin-top:20px">انسخ رابط موقعك وارسله لاخوياك - بيدخلون معك مباشر</p>
+<div class="top">
+<span>🚔 LSPD</span><span class="badge" id="who"></span><span class="badge" id="cnt">0 عسكري</span>
+<span style="margin-right:auto"></span>
+<button class="btn-ghost btn" onclick="localStorage.clear();location.reload()">خروج</button>
+</div>
+
+<div class="wrap">
+<div>
+<div class="card">
+<h3>👑 لوحة التحكم</h3>
+<div style="font-size:12px;color:#888;margin:8px 0">انت: <b id="myRank"></b></div>
+<div style="display:grid;gap:8px;margin-top:10px">
+<input id="search" placeholder="🔍 ابحث عن اسم">
+<select id="filterRank"><option value="">كل الرتب</option><option>لواء</option><option>عميد</option><option>عقيد</option><option>مقدم</option><option>رائد</option><option>نقيب</option><option>ملازم أول</option><option>ملازم</option><option>رقيب أول</option><option>رقيب</option><option>عريف</option><option>عسكري</option></select>
+</div>
+<div style="margin-top:14px"><h4>📜 السجل</h4><div class="log" id="logs"></div></div>
+</div>
+</div>
+
+<div>
+<div class="card">
+<h3>👮 العساكر</h3>
+<table><thead><tr><th>#</th><th>الاسم</th><th>الرتبة</th><th>النقاط</th><th>تحكم</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
 </div>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {getFirestore,collection,doc,setDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import {getFirestore,collection,doc,setDoc,deleteDoc,updateDoc,onSnapshot,addDoc,serverTimestamp,query,orderBy} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyDPW113hl8oe6RfF6rpq_-vUQ_0AK34sSs",authDomain:"lspd-2026-1.firebaseapp.com",projectId:"lspd-2026-1"};
-let db, soldiers=[];
-const errBox=document.getElementById("err");
-const stat=document.getElementById("stat");
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 
-function showE(m){errBox.style.display="block";errBox.textContent=m; stat.textContent="❌ فيه خطأ - شوف المربع الأحمر";}
+const ranks=["عسكري","عريف","رقيب","رقيب أول","ملازم","ملازم أول","نقيب","رائد","مقدم","عقيد","عميد","لواء"];
+let soldiers=[],logs=[],me=localStorage.getItem("ME")||"";
 
-try{
-let app=initializeApp(firebaseConfig);
-db=getFirestore(app);
-stat.textContent="✅ متصل...";
-}catch(e){showE(e.message);}
-
-let me=localStorage.getItem("ME")||"";
+function canManage(myR,targetR){return ranks.indexOf(myR) > ranks.indexOf(targetR) || myR==="لواء"}
 
 function render(){
- document.getElementById("tb").innerHTML=soldiers.map((s,i)=>`<tr><td>${i+1}</td><td>${s.name}</td><td>${s.rank}</td></tr>`).join("");
- document.getElementById("cnt").textContent=soldiers.length;
+ let q=document.getElementById("search").value.toLowerCase();
+ let fr=document.getElementById("filterRank").value;
+ let list=soldiers.filter(s=> (!q||s.name.toLowerCase().includes(q)) && (!fr||s.rank===fr) ).sort((a,b)=> ranks.indexOf(b.rank)-ranks.indexOf(a.rank));
+ document.getElementById("tb").innerHTML=list.map((s,i)=>{
+  let my=ranks.indexOf(soldiers.find(x=>x.name===me)?.rank||"عسكري");
+  let tr=ranks.indexOf(s.rank);
+  let can = me && (ranks.indexOf(soldiers.find(x=>x.name===me)?.rank||"عسكري")>tr || soldiers.find(x=>x.name===me)?.rank==="لواء") && s.name!==me;
+  return `<tr><td>${i+1}</td><td>${s.name}${s.name===me?' ⭐':''}</td><td><span class="rank">${s.rank}</span></td><td>${s.points||0}</td><td>${can?`<button class="btn btn-green" onclick="changeRank('${s.id}',1)">⬆️</button> <button class="btn btn-ghost" onclick="changeRank('${s.id}',-1)">⬇️</button> <button class="btn btn-green" onclick="addP('${s.id}',1)">+1</button> <button class="btn btn-ghost" onclick="addP('${s.id}',-1)">-1</button> <button class="btn btn-red" onclick="kick('${s.id}')">طرد</button>`:'-'}</td></tr>`
+ }).join("");
+ document.getElementById("cnt").textContent=list.length+" عسكري";
+ let myData=soldiers.find(s=>s.name===me);
+ if(myData) document.getElementById("myRank").textContent=myData.rank;
 }
 
-function openMain(){
- document.getElementById("loginDiv").style.display="none";
- document.getElementById("mainDiv").style.display="block";
- document.getElementById("who").textContent="👋 "+me;
+window.changeRank=async(id,dir)=>{
+ let s=soldiers.find(x=>x.id===id); if(!s) return;
+ let idx=ranks.indexOf(s.rank)+dir; if(idx<0||idx>=ranks.length) return;
+ await updateDoc(doc(db,"soldiers",id),{rank:ranks[idx]});
+ await addDoc(collection(db,"logs"),{text:`${me} رقى ${s.name} إلى ${ranks[idx]}`,time:serverTimestamp()});
+}
+window.addP=async(id,d)=>{
+ let s=soldiers.find(x=>x.id===id); await updateDoc(doc(db,"soldiers",id),{points:(s.points||0)+d});
+ await addDoc(collection(db,"logs"),{text:`${me} ${d>0?'+':''}${d} نقطة لـ ${s.name}`,time:serverTimestamp()});
+}
+window.kick=async(id)=>{
+ let s=soldiers.find(x=>x.id===id); if(!confirm("تطرد "+s.name+"؟")) return;
+ await deleteDoc(doc(db,"soldiers",id));
+ await addDoc(collection(db,"logs"),{text:`${me} طرد ${s.name}`,time:serverTimestamp()});
+}
+
+document.getElementById("search").oninput=render; document.getElementById("filterRank").onchange=render;
+
+onSnapshot(collection(db,"soldiers"),snap=>{
+ soldiers=snap.docs.map(d=>d.data());
  render();
-}
+ if(me){
+  let found=soldiers.find(s=>s.name.toLowerCase()===me.toLowerCase());
+  if(found){ document.getElementById("login").style.display="none"; document.getElementById("who").textContent="👋 "+me; }
+ }
+});
 
-document.getElementById("goBtn").addEventListener("click",async()=>{
- let n=document.getElementById("nameI").value.trim();
- if(!n){alert("اكتب اسمك");return;}
- stat.textContent="⏳ جاري الدخول...";
+onSnapshot(query(collection(db,"logs"),orderBy("time","desc")),snap=>{
+ logs=snap.docs.map(d=>d.data());
+ document.getElementById("logs").innerHTML=logs.slice(0,30).map(l=>`<div>${l.text}</div>`).join("");
+});
+
+document.getElementById("enterBtn").onclick=async()=>{
+ let n=document.getElementById("nameI").value.trim(); if(!n) return alert("اكتب اسمك");
  try{
   let ex=soldiers.find(s=>s.name.toLowerCase()===n.toLowerCase());
   if(!ex){
    let id=Date.now().toString();
    let rank=soldiers.length===0?"لواء":"عسكري";
-   await setDoc(doc(db,"soldiers",id),{id:id,name:n,rank:rank});
-   stat.textContent="✅ تم إنشائك";
+   await setDoc(doc(db,"soldiers",id),{id,name:n,rank,points:0});
   }
   me=n; localStorage.setItem("ME",me);
-  openMain();
- }catch(e){showE(e.code+" : "+e.message);}
-});
-
-if(db){
- onSnapshot(collection(db,"soldiers"),(snap)=>{
-  soldiers=snap.docs.map(d=>d.data());
-  stat.textContent="✅ متصل - العدد: "+soldiers.length;
-  render();
-  if(me && soldiers.find(s=>s.name.toLowerCase()===me.toLowerCase())) openMain();
- },(e)=>{showE(e.code+" : "+e.message);});
+  document.getElementById("login").style.display="none";
+  document.getElementById("who").textContent="👋 "+me;
+ }catch(e){document.getElementById("err").textContent=e.message}
 }
-
 if(me) document.getElementById("nameI").value=me;
 </script>
 </body>
