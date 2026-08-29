@@ -2,138 +2,143 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LSPD - نظام إدارة الشرطة</title>
+<title>LSPD - MDT & Protocols System</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0e14;--card:#151a23;--b:#2a3441;--blue:#2a7fff;--gold:#f0c040;--red:#ff4d4d;--green:#2ecc71}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:system-ui}
-.top{position:sticky;top:0;z-index:5;background:#11161e;border-bottom:1px solid var(--b);padding:12px 16px;display:flex;align-items:center;gap:10px}
-.badge{padding:4px 10px;border-radius:20px;background:#1e2a3a;border:1px solid var(--b);font-size:12px}
-.wrap{max-width:1100px;margin:0 auto;padding:18px;display:grid;grid-template-columns:280px 1fr;gap:18px}
-@media(max-width:800px){.wrap{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px}
-.btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:bold}
-.btn-blue{background:var(--blue);color:#fff;width:100%}.btn-ghost{background:#1c2531;border:1px solid var(--b);color:#ccc}
-.btn-red{background:var(--red);color:#fff}.btn-green{background:var(--green);color:#000}
-input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--b);background:#0d121a;color:#fff;margin:6px 0}
-table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #1f2937;text-align:right;font-size:14px}
-.rank{padding:3px 8px;border-radius:8px;background:#1e293b;font-size:11px}
-.log{max-height:300px;overflow:auto;font-size:12px;color:#9ca3af}.log div{padding:6px 0;border-bottom:1px dashed #222}
-#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:99}
-.loginBox{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:26px;width:92%;max-width:400px;text-align:center}
+:root{--bg:#070a12;--card:#121624;--b:#1f2738;--blue:#2a7fff;--gold:#f0c040;--red:#ff3b3b;--green:#00d084;--muted:#7a8599}
+*{box-sizing:border-box;font-family:'Tajawal',sans-serif}body{margin:0;background:var(--bg);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(7,10,18,.95);border-bottom:1px solid var(--b);padding:12px 18px;display:flex;gap:10px;align-items:center}
+.badge{background:#1a2031;border:1px solid var(--b);padding:5px 12px;border-radius:20px;font-size:12px}
+.layout{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 56px)}@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:fixed;inset:0 40% 0 0;z-index:30;transform:translateX(100%);transition:.3s}.side.open{transform:translateX(0)}}
+.side{background:var(--card);border-left:1px solid var(--b);padding:16px;overflow:auto}
+.mitem{padding:13px 14px;border-radius:12px;cursor:pointer;color:var(--muted);display:flex;gap:10px;margin-bottom:6px}
+.mitem.active{background:#1e2a45;color:#fff;border-right:3px solid var(--blue)}
+.main{padding:20px}
+.card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:18px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:700px){.grid3{grid-template-columns:1fr}}
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--b);background:#0e121d;color:#fff;margin:6px 0}
+.btn{padding:11px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:800}.btn-blue{background:var(--blue);color:#fff}.btn-gold{background:var(--gold);color:#000}.btn-red{background:var(--red);color:#fff}.btn-ghost{background:#1a2031;border:1px solid var(--b);color:#fff}
+table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--b);text-align:right;font-size:13px}th{color:var(--muted)}
+.hidden{display:none}
+#login{position:fixed;inset:0;background:radial-gradient(800px at 50% -20%,#1c2d52,transparent),var(--bg);display:flex;align-items:center;justify-content:center;z-index:100}
+.loginBox{background:var(--card);border:1px solid var(--b);border-radius:22px;padding:32px;width:94%;max-width:420px;text-align:center}
+.proto{padding:14px;background:#151b2c;border:1px solid var(--b);border-radius:12px;margin-bottom:10px}
+.proto h4{margin:0 0 6px 0;color:var(--gold)}.proto p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.mdtres{padding:10px;background:#0e121d;border:1px solid var(--b);border-radius:10px;margin-top:8px}
 </style>
 </head>
 <body>
+<div id="login"><div class="loginBox"><div style="font-size:64px">🚔</div><h1>LSPD MDT</h1><p style="color:var(--muted)">نظام القيادة والبروتوكولات</p><input id="nameI" placeholder="الاسم الكامل"><button class="btn btn-blue" id="enterBtn" style="width:100%;margin-top:10px;padding:14px">دخول للنظام</button><div id="err" style="color:#ff8888;font-size:12px;margin-top:8px;white-space:pre-wrap;direction:ltr;text-align:left"></div></div></div>
 
-<div id="login">
-<div class="loginBox">
-<div style="font-size:50px">🚔</div>
-<h2>LSPD</h2><p style="color:#888">اكتب اسمك للدخول</p>
-<input id="nameI" placeholder="اسمك">
-<button class="btn btn-blue" id="enterBtn">🚪 دخول</button>
-<div id="err" style="color:#ff7777;margin-top:10px;font-size:12px;white-space:pre-wrap"></div>
-</div>
-</div>
+<div class="top"><b>🚔 LSPD SYSTEM</b><span class="badge" id="who"></span><span class="badge" id="online">0 متصل</span><span style="margin-right:auto"></span><button class="btn btn-ghost" style="padding:6px 10px" onclick="document.querySelector('.side').classList.toggle('open')">☰</button><button class="btn btn-ghost" style="padding:6px 10px" onclick="localStorage.clear();location.reload()">خروج</button></div>
 
-<div class="top">
-<span>🚔 LSPD</span><span class="badge" id="who"></span><span class="badge" id="cnt">0 عسكري</span>
-<span style="margin-right:auto"></span>
-<button class="btn-ghost btn" onclick="localStorage.clear();location.reload()">خروج</button>
+<div class="layout">
+<div class="side">
+<div style="display:grid;gap:6px">
+<div class="mitem active" data-p="dash">📊 القيادة</div>
+<div class="mitem" data-p="mdt">💻 MDT - البحث الجنائي</div>
+<div class="mitem" data-p="soldiers">👮 العساكر</div>
+<div class="mitem" data-p="protocols">📋 البروتوكولات</div>
+<div class="mitem" data-p="ranks">🎖️ الرتب</div>
+<div class="mitem" data-p="missions">🎯 المهام</div>
+<div class="mitem" data-p="logs">📜 السجل</div>
 </div>
-
-<div class="wrap">
-<div>
-<div class="card">
-<h3>👑 لوحة التحكم</h3>
-<div style="font-size:12px;color:#888;margin:8px 0">انت: <b id="myRank"></b></div>
-<div style="display:grid;gap:8px;margin-top:10px">
-<input id="search" placeholder="🔍 ابحث عن اسم">
-<select id="filterRank"><option value="">كل الرتب</option><option>لواء</option><option>عميد</option><option>عقيد</option><option>مقدم</option><option>رائد</option><option>نقيب</option><option>ملازم أول</option><option>ملازم</option><option>رقيب أول</option><option>رقيب</option><option>عريف</option><option>عسكري</option></select>
-</div>
-<div style="margin-top:14px"><h4>📜 السجل</h4><div class="log" id="logs"></div></div>
-</div>
+<div class="card" style="margin-top:14px"><div style="font-size:11px;color:var(--muted)">رتبتك</div><div id="myRank" style="font-size:18px;font-weight:800">-</div><div style="font-size:11px;color:var(--muted);margin-top:8px">نقاطك</div><div id="myPoints" style="font-size:18px;font-weight:800;color:var(--gold)">0</div></div>
 </div>
 
-<div>
-<div class="card">
-<h3>👮 العساكر</h3>
-<table><thead><tr><th>#</th><th>الاسم</th><th>الرتبة</th><th>النقاط</th><th>تحكم</th></tr></thead><tbody id="tb"></tbody></table>
+<div class="main">
+<!-- DASH -->
+<div id="page-dash">
+<div class="grid3">
+<div class="card"><p style="color:var(--muted);font-size:12px">إجمالي القوة</p><h1 id="s1">0</h1></div>
+<div class="card"><p style="color:var(--muted);font-size:12px">الضباط</p><h1 id="s2">0</h1></div>
+<div class="card"><p style="color:var(--muted);font-size:12px">مجموع النقاط</p><h1 id="s3">0</h1></div>
 </div>
+<div class="card"><h3>👑 القيادة العليا</h3><div id="leaders"></div></div>
+<div class="card"><h3>🔥 آخر العمليات</h3><div id="logsDash"></div></div>
+</div>
+
+<!-- MDT -->
+<div id="page-mdt" class="hidden">
+<div class="card"><h3>💻 MDT - نظام البحث الجنائي</h3><div style="display:flex;gap:8px"><input id="mdtSearch" placeholder="ابحث باسم العسكري / المواطن / رقم الهوية"><button class="btn btn-blue" onclick="doMDT()">بحث</button></div><div id="mdtRes" style="margin-top:12px"></div></div>
+<div class="card"><h3>🚨 بلاغات نشطة</h3><div style="display:flex;gap:8px"><input id="reportT" placeholder="عنوان البلاغ"><button class="btn btn-gold" onclick="addReport()">إضافة بلاغ</button></div><div id="reports" style="margin-top:10px"></div></div>
+</div>
+
+<!-- SOLDIERS -->
+<div id="page-soldiers" class="hidden">
+<div class="card"><div style="display:flex;gap:8px"><input id="search" placeholder="بحث"><select id="filterRank" style="width:160px"><option value="">كل الرتب</option><option>لواء</option><option>عميد</option><option>عقيد</option><option>مقدم</option><option>رائد</option><option>نقيب</option><option>ملازم أول</option><option>ملازم</option><option>رقيب أول</option><option>رقيب</option><option>عريف</option><option>عسكري</option></select></div><table style="margin-top:10px"><thead><tr><th>#</th><th>الاسم</th><th>الرتبة</th><th>النقاط</th><th>تحكم</th></tr></thead><tbody id="tb"></tbody></table></div>
+</div>
+
+<!-- PROTOCOLS -->
+<div id="page-protocols" class="hidden">
+<div class="card"><h2>📋 بروتوكولات شرطة لوس سانتوس</h2>
+<div class="proto"><h4>🔵 بروتوكول 1 - التوقيف المروري</h4><p>1. تشغيل الفلاشر - 2. طلب الهوية والرخصة - 3. فحص MDT - 4. تحرير مخالفة أو تنبيه - ممنوع التفتيش بدون سبب</p></div>
+<div class="proto"><h4>🟡 بروتوكول 2 - المداهمة</h4><p>يجب وجود إذن من رتبة نقيب فما فوق + حضور 3 عساكر على الأقل + تصوير المداهمة + احترام حقوق المشتبه</p></div>
+<div class="proto"><h4>🔴 بروتوكول 3 - إطلاق النار</h4><p>لا يسمح بإطلاق النار إلا عند تهديد مباشر للحياة - يجب التحذير أولاً - الإبلاغ فوراً في الراديو</p></div>
+<div class="proto"><h4>🟢 بروتوكول 4 - التحقيق</h4><p>حق المتهم بالصمت - لا ضرب ولا تهديد - تسجيل كل الاعترافات في MDT - حضور محامي إذا طلب</p></div>
+<div class="proto"><h4>⚫ بروتوكول 5 - القيادة</h4><p>اللواء هو القائد الأعلى - العميد نائب - لا ترقية بدون نقاط كافية - الخصم بقرار من نقيب فما فوق</p></div>
+<div class="proto"><h4>🔵 بروتوكول 6 - الراديو</h4><p>استخدم كود 10 - مثال: 10-20 موقعك، 10-8 جاهز، 10-7 مشغول، 10-4 علم - ممنوع السب في الراديو</p></div>
+</div>
+</div>
+
+<!-- RANKS -->
+<div id="page-ranks" class="hidden"><div class="card"><h3>🎖️ سلم الرتب</h3><div id="ranksList"></div></div></div>
+<!-- MISSIONS -->
+<div id="page-missions" class="hidden"><div class="card"><h3>🎯 المهام</h3><div style="display:flex;gap:8px"><input id="missT" placeholder="عنوان المهمة"><button class="btn btn-blue" onclick="addMiss()">إضافة</button></div><div id="missList" style="margin-top:10px"></div></div></div>
+<!-- LOGS -->
+<div id="page-logs" class="hidden"><div class="card"><h3>📜 السجل الكامل</h3><div id="logsFull"></div></div></div>
 </div>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {getFirestore,collection,doc,setDoc,deleteDoc,updateDoc,onSnapshot,addDoc,serverTimestamp,query,orderBy} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
 const firebaseConfig={apiKey:"AIzaSyDPW113hl8oe6RfF6rpq_-vUQ_0AK34sSs",authDomain:"lspd-2026-1.firebaseapp.com",projectId:"lspd-2026-1"};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
-
 const ranks=["عسكري","عريف","رقيب","رقيب أول","ملازم","ملازم أول","نقيب","رائد","مقدم","عقيد","عميد","لواء"];
-let soldiers=[],logs=[],me=localStorage.getItem("ME")||"";
+let soldiers=[],logs=[],missions=[],reports=[],me=localStorage.getItem("ME")||"";
+function canManage(myR,tR){return ranks.indexOf(myR)>ranks.indexOf(tR)||myR==="لواء"}
 
-function canManage(myR,targetR){return ranks.indexOf(myR) > ranks.indexOf(targetR) || myR==="لواء"}
-
-function render(){
- let q=document.getElementById("search").value.toLowerCase();
- let fr=document.getElementById("filterRank").value;
- let list=soldiers.filter(s=> (!q||s.name.toLowerCase().includes(q)) && (!fr||s.rank===fr) ).sort((a,b)=> ranks.indexOf(b.rank)-ranks.indexOf(a.rank));
- document.getElementById("tb").innerHTML=list.map((s,i)=>{
-  let my=ranks.indexOf(soldiers.find(x=>x.name===me)?.rank||"عسكري");
-  let tr=ranks.indexOf(s.rank);
-  let can = me && (ranks.indexOf(soldiers.find(x=>x.name===me)?.rank||"عسكري")>tr || soldiers.find(x=>x.name===me)?.rank==="لواء") && s.name!==me;
-  return `<tr><td>${i+1}</td><td>${s.name}${s.name===me?' ⭐':''}</td><td><span class="rank">${s.rank}</span></td><td>${s.points||0}</td><td>${can?`<button class="btn btn-green" onclick="changeRank('${s.id}',1)">⬆️</button> <button class="btn btn-ghost" onclick="changeRank('${s.id}',-1)">⬇️</button> <button class="btn btn-green" onclick="addP('${s.id}',1)">+1</button> <button class="btn btn-ghost" onclick="addP('${s.id}',-1)">-1</button> <button class="btn btn-red" onclick="kick('${s.id}')">طرد</button>`:'-'}</td></tr>`
- }).join("");
- document.getElementById("cnt").textContent=list.length+" عسكري";
- let myData=soldiers.find(s=>s.name===me);
- if(myData) document.getElementById("myRank").textContent=myData.rank;
+function refresh(){
+ let my=soldiers.find(s=>s.name===me); let myR=my?.rank||"عسكري";
+ document.getElementById("myRank").textContent=myR; document.getElementById("myPoints").textContent=my?.points||0;
+ document.getElementById("who").textContent=my?`${me} - ${myR}`:""; document.getElementById("online").textContent=soldiers.length+" متصل";
+ document.getElementById("s1").textContent=soldiers.length; document.getElementById("s2").textContent=soldiers.filter(s=>ranks.indexOf(s.rank)>=4).length; document.getElementById("s3").textContent=soldiers.reduce((a,b)=>a+(b.points||0),0);
+ document.getElementById("leaders").innerHTML=soldiers.filter(s=>ranks.indexOf(s.rank)>=9).sort((a,b)=>ranks.indexOf(b.rank)-ranks.indexOf(a.rank)).map(s=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b)"><span>${s.name}</span><span style="color:var(--gold)">${s.rank}</span></div>`).join("")||'<span style="color:var(--muted)">لا يوجد قيادة</span>';
+ let tb=document.getElementById("tb"); if(tb){let q=document.getElementById("search").value.toLowerCase(); let fr=document.getElementById("filterRank").value; let list=soldiers.filter(s=>(!q||s.name.toLowerCase().includes(q))&&(!fr||s.rank===fr)).sort((a,b)=>ranks.indexOf(b.rank)-ranks.indexOf(a.rank)); tb.innerHTML=list.map((s,i)=>{let can=me&&s.name!==me&&canManage(myR,s.rank); return `<tr><td>${i+1}</td><td>${s.name}${s.name===me?' ⭐':''}</td><td>${s.rank}</td><td>${s.points||0}</td><td>${can?`<button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="upRank('${s.id}',1)">ترقية</button> <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="upRank('${s.id}',-1)">تنزيل</button> <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="addP('${s.id}',5)">+5</button> <button class="btn btn-red" style="padding:4px 8px;font-size:11px" onclick="kick('${s.id}')">طرد</button>`:'-'}</td></tr>`}).join("");}
+ document.getElementById("ranksList").innerHTML=ranks.slice().reverse().map(r=>`<div style="display:flex;justify-content:space-between;padding:10px;background:#151b2c;border:1px solid var(--b);border-radius:10px;margin-bottom:6px"><span>${r}</span><span style="color:var(--muted)">${soldiers.filter(s=>s.rank===r).length}</span></div>`).join("");
+ document.getElementById("missList").innerHTML=missions.map(m=>`<div style="display:flex;justify-content:space-between;padding:10px;background:#151b2c;border-radius:10px;margin-bottom:6px"><span>${m.title} - <small style="color:var(--muted)">${m.by}</small></span><button class="btn btn-red" style="padding:4px 8px" onclick="delMiss('${m.id}')">حذف</button></div>`).join("")||'لا يوجد';
+ document.getElementById("reports").innerHTML=reports.map(r=>`<div style="padding:10px;background:#151b2c;border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between"><span>🚨 ${r.title} - ${r.by}</span><button class="btn btn-red" style="padding:4px 8px" onclick="delRep('${r.id}')">إنهاء</button></div>`).join("")||'لا يوجد بلاغات';
+}
+window.upRank=async(id,dir)=>{let s=soldiers.find(x=>x.id===id); let idx=ranks.indexOf(s.rank)+dir; if(idx<0||idx>=ranks.length) return; await updateDoc(doc(db,"soldiers",id),{rank:ranks[idx]}); await addDoc(collection(db,"logs"),{text:`${me} ${dir>0?'رقى':'نزل'} ${s.name} إلى ${ranks[idx]}`,time:serverTimestamp()});}
+window.addP=async(id,d)=>{let s=soldiers.find(x=>x.id===id); await updateDoc(doc(db,"soldiers",id),{points:(s.points||0)+d}); await addDoc(collection(db,"logs"),{text:`${me} ${d>0?'+':''}${d} لـ ${s.name}`,time:serverTimestamp()});}
+window.kick=async(id)=>{let s=soldiers.find(x=>x.id===id); if(!confirm("تطرد "+s.name+"؟")) return; await deleteDoc(doc(db,"soldiers",id)); await addDoc(collection(db,"logs"),{text:`${me} طرد ${s.name}`,time:serverTimestamp()});}
+window.addMiss=async()=>{let t=document.getElementById("missT").value.trim(); if(!t) return; await addDoc(collection(db,"missions"),{title:t,by:me,time:serverTimestamp()}); await addDoc(collection(db,"logs"),{text:`${me} أضاف مهمة: ${t}`,time:serverTimestamp()}); document.getElementById("missT").value="";}
+window.delMiss=async(id)=>{await deleteDoc(doc(db,"missions",id));}
+window.addReport=async()=>{let t=document.getElementById("reportT").value.trim(); if(!t) return; await addDoc(collection(db,"reports"),{title:t,by:me,time:serverTimestamp()}); document.getElementById("reportT").value="";}
+window.delRep=async(id)=>{await deleteDoc(doc(db,"reports",id));}
+window.doMDT=()=>{
+ let q=document.getElementById("mdtSearch").value.toLowerCase(); if(!q) return;
+ let res=soldiers.filter(s=>s.name.toLowerCase().includes(q));
+ let html=res.length?res.map(s=>`<div class="mdtres"><b>👮 ${s.name}</b><br>الرتبة: ${s.rank} | النقاط: ${s.points||0}<br>الحالة: <span style="color:var(--green)">نشط</span> | سجل جنائي: نظيف<br><small>تم العثور في قاعدة بيانات LSPD</small></div>`).join(""):`<div class="mdtres">❌ لا يوجد نتائج لـ "${q}" - السجل نظيف</div>`;
+ document.getElementById("mdtRes").innerHTML=html;
 }
 
-window.changeRank=async(id,dir)=>{
- let s=soldiers.find(x=>x.id===id); if(!s) return;
- let idx=ranks.indexOf(s.rank)+dir; if(idx<0||idx>=ranks.length) return;
- await updateDoc(doc(db,"soldiers",id),{rank:ranks[idx]});
- await addDoc(collection(db,"logs"),{text:`${me} رقى ${s.name} إلى ${ranks[idx]}`,time:serverTimestamp()});
-}
-window.addP=async(id,d)=>{
- let s=soldiers.find(x=>x.id===id); await updateDoc(doc(db,"soldiers",id),{points:(s.points||0)+d});
- await addDoc(collection(db,"logs"),{text:`${me} ${d>0?'+':''}${d} نقطة لـ ${s.name}`,time:serverTimestamp()});
-}
-window.kick=async(id)=>{
- let s=soldiers.find(x=>x.id===id); if(!confirm("تطرد "+s.name+"؟")) return;
- await deleteDoc(doc(db,"soldiers",id));
- await addDoc(collection(db,"logs"),{text:`${me} طرد ${s.name}`,time:serverTimestamp()});
-}
-
-document.getElementById("search").oninput=render; document.getElementById("filterRank").onchange=render;
-
-onSnapshot(collection(db,"soldiers"),snap=>{
- soldiers=snap.docs.map(d=>d.data());
- render();
- if(me){
-  let found=soldiers.find(s=>s.name.toLowerCase()===me.toLowerCase());
-  if(found){ document.getElementById("login").style.display="none"; document.getElementById("who").textContent="👋 "+me; }
- }
-});
-
-onSnapshot(query(collection(db,"logs"),orderBy("time","desc")),snap=>{
- logs=snap.docs.map(d=>d.data());
- document.getElementById("logs").innerHTML=logs.slice(0,30).map(l=>`<div>${l.text}</div>`).join("");
+onSnapshot(collection(db,"soldiers"),s=>{soldiers=s.docs.map(d=>d.data()); refresh(); if(me&&soldiers.find(x=>x.name.toLowerCase()===me.toLowerCase())) document.getElementById("login").style.display="none";});
+onSnapshot(collection(db,"missions"),s=>{missions=s.docs.map(d=>({id:d.id,...d.data()})); refresh();});
+onSnapshot(collection(db,"reports"),s=>{reports=s.docs.map(d=>({id:d.id,...d.data()})); refresh();});
+onSnapshot(query(collection(db,"logs"),orderBy("time","desc")),s=>{
+ let l=s.docs.map(d=>d.data());
+ document.getElementById("logsDash").innerHTML=l.slice(0,6).map(x=>`<div style="padding:6px 0;border-bottom:1px dashed #222;font-size:12px;color:var(--muted)">${x.text}</div>`).join("")||'لا يوجد';
+ document.getElementById("logsFull").innerHTML=l.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--b);font-size:13px">${x.text}</div>`).join("")||'لا يوجد';
 });
 
 document.getElementById("enterBtn").onclick=async()=>{
  let n=document.getElementById("nameI").value.trim(); if(!n) return alert("اكتب اسمك");
- try{
-  let ex=soldiers.find(s=>s.name.toLowerCase()===n.toLowerCase());
-  if(!ex){
-   let id=Date.now().toString();
-   let rank=soldiers.length===0?"لواء":"عسكري";
-   await setDoc(doc(db,"soldiers",id),{id,name:n,rank,points:0});
-  }
-  me=n; localStorage.setItem("ME",me);
-  document.getElementById("login").style.display="none";
-  document.getElementById("who").textContent="👋 "+me;
- }catch(e){document.getElementById("err").textContent=e.message}
+ try{let ex=soldiers.find(s=>s.name.toLowerCase()===n.toLowerCase()); if(!ex){let id=Date.now().toString(); let rank=soldiers.length===0?"لواء":"عسكري"; await setDoc(doc(db,"soldiers",id),{id,name:n,rank,points:0});} me=n; localStorage.setItem("ME",me); document.getElementById("login").style.display="none"; refresh();}catch(e){document.getElementById("err").textContent=e.message}
 }
+document.querySelectorAll(".mitem").forEach(el=>{el.onclick=()=>{document.querySelectorAll(".mitem").forEach(x=>x.classList.remove("active")); el.classList.add("active"); document.querySelectorAll("[id^=page-]").forEach(p=>p.classList.add("hidden")); document.getElementById("page-"+el.dataset.p).classList.remove("hidden"); document.querySelector(".side").classList.remove("open");}})
+document.getElementById("search").oninput=refresh; document.getElementById("filterRank").onchange=refresh;
 if(me) document.getElementById("nameI").value=me;
 </script>
 </body>
